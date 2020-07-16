@@ -180,3 +180,6 @@ $ git commit -am "变更的说明信息"
 
 7. 创建一个名叫bc-a的分支，并且进行五次提交
 
+#### [git报错：Pull is not possible because you have unmerged files解决方法](https://www.cnblogs.com/zhujiabin/p/10148803.html)
+
+>  在git pull的过程中，如果有冲突，那么除了冲突的文件之外，其它的文件都会做为staged区的文件保存起来。

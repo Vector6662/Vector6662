@@ -141,6 +141,38 @@ module.exports = 'Hello world';
 
 > 我们选择了最后一种配置方案，**配置即代码**
 
+关于配置文件的两种写法区别提醒（挺细节的）
+
+1.返回的是一个object对象
+
+```js
+module.exports=appInfo=>{
+    config={}
+    config.key=appInfo.name + '_1594693641174_1196';
+    userConfig={}
+    ...
+    ...
+    return {
+        config,
+        userConfig
+    }
+}
+```
+
+2.返回的是一个方法，**但是这时一定要有return！**
+
+```javascript
+module.exports={
+    logger: {
+    dir: '/home/admin/logs/demoapp',
+  }
+}
+```
+
+两种方式我更倾向于使用第二种，但是如果有内置对象如appInfo需要调用那就只能第二种了:laughing:
+
+这里的appInfo对象感觉也挺有用的，它的那些属性请注意一下
+
 
 
 #### 一些有利于理解EggJs的线索
@@ -153,7 +185,8 @@ module.exports = 'Hello world';
 
 对应的service实例！！！！！！！！！！关键信息！！！！
 
-
+> - 如上面例子中的 `ctx.request.query.id` 和 `ctx.query.id` 是等价的，`ctx.response.body=` 和 `ctx.body=` 是等价的。
+> - **需要注意的是，获取 POST 的 body 应该使用 `ctx.request.body`，而不是 `ctx.body`**。
 
 
 
@@ -188,7 +221,44 @@ module.exports = 'Hello world';
    function func2([params]){...}
    ```
 
-   
+3. `const`类型
+
+   ```javascript
+   const config={}
+   config.dir='/.'
+   config.base=.'///'	//这两种是可以的
+   config={}	//不可以！因为const是常量类型，它本身指向的对象是无法改变的
+   ```
+
+4. :exclamation:`...`扩展运算符
+
+   > 扩展运算符（spread）是三个点（`...`）。它好比 rest 参数的逆运算，将一个数组转为用逗号分隔的**参数序列**。    [来源](https://es6.ruanyifeng.com/?search=map&x=0&y=0#docs/array)
+
+   形象一点说就，`a=[0,1,2]`这个数组是被a这个“箱子”装住了，通过扩展运算符就把这个箱子拆掉，把里面的东西给”倒出来“
+
+   在北奔接口项目的配置文件中，有
+
+   ```javascript
+   module.exports=appInfo=>{
+       const config={}
+       ...略
+       const userConfig={}
+       ...略
+       
+       return {
+           ...config，
+           ...userConfig
+       }
+   }
+   ```
+
+   将config和userConfig**拆箱**
+
+   这里必须这么写！因为这个文件（module）只能暴露一个对象，也就是config对象。如果像上面的例子中途有两个对象
+
+
+
+
 
 
 

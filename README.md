@@ -42,3 +42,67 @@ Here are some ideas to get you started:
 1. 其他仓库（姑且称为项目）中尽量只用一个md文件来记录开发
 2. 本仓库应该大部分都是md文件，用来记录各种`**学习`
 3. 本`README`文件其实可以比作`java`程序的main函数，但是具体的功能还没有想到
+4. 这里还是主要以**天**为单位记录一下每天的开发心得，学习心得，而不要太设计具体的项目，特别不能提及如“xxx项目目前进展缓慢”之类的。同时，这里是开发心得学习心得，而不是开发计划！
+5. 如果每天的日志没来得及写，那么可以临时记录在本子上，空了再总结到这里
+
+
+
+
+
+#### Logger
+
+---
+
+*2020/7/19    Sun*
+
+在开发Spring Boot接口的时候在*浏览器*上输入params来模拟提交时，参数的值为字符串的时候是不需要加 "" 的！我tm现在才注意到，我的天哪，我因为这个走了好多弯路！
+
+在调试上面提到的参数问题时，用到了IDEA的断点测试功能，才发现这是一个极为强大的工具，不必再使用console打印这种稍微麻烦的方式了。而且还能发现console打印不能发现的问题，比如上面例子，localhost...?city="成都"，在断点测试上会出现""成都“”这种能表示出值的类型，便于更好的发现错误
+
+其实eggjs的[开发教程](https://eggjs.org/zh-cn/tutorials/index.html)写得挺清楚的，只是我没认证看，或者说看不懂，因为一些基础性的知识没有很好的掌握，比如最近在看的Passport鉴权部分，对token的理解不到位。
+
+还不是很清楚“日志”是个啥，感觉用处很大的样子
+
+Spring Boot跨域问题解决方案似乎是个很复杂的问题？
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### PS:
+
+##### EMOJI CHEAT SHEET
+
+<img src="https://img-blog.csdn.net/20181007202942931?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMzOTgyMjMy/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img" style="zoom: 150%;" />

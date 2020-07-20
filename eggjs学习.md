@@ -56,16 +56,19 @@ open localhost:7001
 
 #### module.exports和exports
 
-> 如果模块输出的是`一个函数`，那就不能定义在`exports`对象上面，而要定义在`module.exports`变量上面。
+> :star: 如果模块输出的是`一个函数`，那就不能定义在`exports`对象上面，而要定义在`module.exports`变量上面。
 
 ```js
 module.exports = function () {
   console.log("hello world")
 }
+//调用
 require('./example2.js')()
 ```
 
 > 上面代码中，`require命令调用自身，等于是执行`module.exports`，因此会输出 hello world。
+
+这应该不是一个很好的暴露方式，至少应该封装到一个类里面	
 
 
 
@@ -94,7 +97,7 @@ require('./example2.js')()
 >
 > 原理很简单：module.exports 指向新的对象时，exports 断开了与 module.exports 的引用，那么通过 exports = module.exports 让 exports 重新指向 module.exports。
 
-也就是说初始状态下module.exports指向的是一个对象，exports是其跟班。如果`module.exports='hello'`，那么这个时候``module.exports`就指向了一个新的
+也就是说初始状态下module.exports指向的是一个对象，exports是其跟班。如果`module.exports='hello'`，那么这个时候``module.exports`就指向了一个新的，
 
 > 合法的javascript对象--boolean, number, date, JSON, string, function, array等等
 
@@ -143,7 +146,7 @@ module.exports = 'Hello world';
 
 关于配置文件的两种写法区别提醒（挺细节的）
 
-1.返回的是一个object对象
+1. 返回的是一个方法，**但是这时一定要有return！**
 
 ```js
 module.exports=appInfo=>{
@@ -153,13 +156,14 @@ module.exports=appInfo=>{
     ...
     ...
     return {
-        config,
-        userConfig
+        //注意这里用到了扩展运算符"..."
+        ...config,
+        ...userConfig
     }
 }
 ```
 
-2.返回的是一个方法，**但是这时一定要有return！**
+2. 返回的是一个object对象
 
 ```javascript
 module.exports={
@@ -230,7 +234,7 @@ module.exports={
    config={}	//不可以！因为const是常量类型，它本身指向的对象是无法改变的
    ```
 
-4. :exclamation:`...`扩展运算符
+4. :exclamation:扩展运算符`...`
 
    > 扩展运算符（spread）是三个点（`...`）。它好比 rest 参数的逆运算，将一个数组转为用逗号分隔的**参数序列**。    [来源](https://es6.ruanyifeng.com/?search=map&x=0&y=0#docs/array)
 
@@ -366,15 +370,60 @@ well
 
 一个asynv就是相当于promise的then链，而且getSomething和testAsync是**并发的独立的**，而且阻塞都只是then链内部阻塞，比如getSomething里面的well输出就被阻塞了。
 
-
-
-
-
 ##### :exclamation:
 
 - 做一个测试，编写一个Promise，里面可以写一个阻塞0.0001秒后执行，然后在这个promise后面写一个console，看看谁先执行？这个是为了证明这个Promise是否是异步执行的？
 
 - 用callback也测试一下
+
 - b站上找一下对promise和async/await的理解！
 
    
+
+#### middleware
+
+其实就是Java web里面的过滤器:joy:。​中间件不需要我们主动调用，它有点像一个触发器的具体的处理方法，事件就是request，传入几个参数然后进行自定义的处理。
+
+> 中间件函数队列，会在最后一个中间件或一个**没有调用next的中间件**那里停止
+
+> 每个中间件都是一个函数(不是函数将报错)，接收两个参数，**第一个是ctx上下文对象，另一个是next函数(由koa-compose定义)**	
+> 来自：https://www.jianshu.com/p/02ed208d4577
+
+中间件的写法比较特别：
+
+```javascript
+// app/middleware/gzip.js
+const isJSON = require('koa-is-json');
+const zlib = require('zlib');
+
+module.exports = (options,app) => {
+    //gzip为一个中间件函数
+  return async function gzip(ctx, next) {
+    await next();
+
+    // 后续中间件执行完成后将响应体转换成 gzip
+    let body = ctx.body;
+    if (!body) return;
+
+    // 支持 options.threshold
+    if (options.threshold && ctx.length < options.threshold) return;
+
+    if (isJSON(body)) body = JSON.stringify(body);
+
+    // 设置 gzip body，修正响应头
+    const stream = zlib.createGzip();
+    stream.end(body);
+    ctx.body = stream;
+    ctx.set('Content-Encoding', 'gzip');
+  };
+};
+```
+
+为什么`module.exports`暴露一个有两个参数方法以后还要返回一个方法呢？我猜可能是因为eggjs是基于koa的，在koa中
+
+> 每个中间件都是一个函数(不是函数将报错)
+
+但是在eggjs中每个中间件都是要封装并存在于middleware目录下并且只能接受两个参数`(options,app)`，而在koa当中没有这一功能，只用给出一个中间件函数即可（如上面的`gzip(ctx,next)`）。这大概便是一个矛盾吧，因为在eggjs中的中间件明明是可以接受四个参数的，但是囿于koa定义的中间件只有两个参数(ctx,next)，所以不得不像上面这样**嵌套**一个`function`。
+
+
+

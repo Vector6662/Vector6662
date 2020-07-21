@@ -67,6 +67,14 @@ Spring Boot跨域问题解决方案似乎是个很复杂的问题？
 
 
 
+*2020/7/21 Tues*
+
+开始学习keras，这个框架是一个比较轻松的框架，可能还得慢慢接触tensorflow。
+
+昨天学习了eggjs的中间件和插件的使用方式：方法当中嵌套方法:laughing:这算是eggjs整合koa时候的一些缺陷吧。
+
+使用JDBC Template再次实现了遥感项目的dao层，但是还是没法配置好mybatis依赖...
+
 
 
 

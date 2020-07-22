@@ -1,77 +1,10 @@
-# Project-remote-sense
-为遥感项目创建的仓库
-
-
-
-#### python需要好好学习下
-
-1. pip 和 anaconda prompt和yum		（待解决）
-
-2. str.format()方法这是个基础方法
-
-3. python上的正则化要学习
-
-4. python切片：
-   
-   ```python
-   a=10 str(a)   int->string
-   a='10' int(a) float(a)	string->int or float #好像3.0版本后就没有了long()？
-   
-   str="adedehny"
-   str[0:2] -> ad
-str[3:6] ->deh
-   
-   ```
-   
-   对比Java
-   
-   ```java
-   int->String		i+""   or     String.ValueOf(i)
-   String->int		Integer.ParseInt(str)    
-   ```
-   
-   
-   
-5. 一些基础的语法事例，直接快速学习
-
-   ```python
-   def filter(l):	# def表示定义函数
-       x=[]
-       for i in range(0,len(l)):	# len()表示获取数组长度
-           if l[i]%2!=0:
-               x.append(l[i])	# 追加
-       return x
-   ```
-
-6. ```py
-   class Test:
-   	def prt(self):
-   		printf(self)
-   
-   t=Test()
-   t.prt()   -> Test.prt(t) 这种方式更接近本质
-   ```
-
-   - self可以不写吗？
-
-   > 在python解释器内部，**当我们调用`t.prt()`时，实际上Python解释成`Test.prt(t)`**，也就是说把self替换成类的实例
-   >
-   > https://www.zhihu.com/question/39264541/answer/685673258
-
-   - 个人理解
-
-   1. <u>python将类的实例以类中参数(self)的形式独立出来</u>，如上面的`Test.prt(t)`，最终始终调用的是Test类而非其实例t。 若实例的方法不传self，则会自行调用传self，这算是python的一个语法糖了。
-   2. 在类中方法的参数中加上self，表明这是一个**实例方法**，而非类方法
-
-   
-
 7. [怎样理解阻塞非阻塞与同步异步的区别？ - 萧萧的回答 - 知乎](https://www.zhihu.com/question/19732473/answer/241673170)
 
    <img src="C:\Users\82526\AppData\Roaming\Typora\typora-user-images\image-20200707133820632.png" alt="image-20200707133820632" style="zoom:80%;" />
 
 8. 由rabbitmq引入的阻塞式和非阻塞式的通信方式思考
 
-   [1](http://rabbitmq.mr-ping.com/AMQP/AMQP_0-9-1_Model_Explained.html)
+   [参考](http://rabbitmq.mr-ping.com/AMQP/AMQP_0-9-1_Model_Explained.html)
 
    > AMQP代理在什么时候删除消息才是正确的？AMQP 0-9-1 规范给我们两种建议：
    >
@@ -80,7 +13,7 @@ str[3:6] ->deh
 
    
 
-#### [python国内源](https://blog.csdn.net/qq_30754565/article/details/82777253)
+#### [pip国内源](https://blog.csdn.net/qq_30754565/article/details/82777253)
 
 ​		阿里云 http://mirrors.aliyun.com/pypi/simple/ 
   中国科技大学 https://pypi.mirrors.ustc.edu.cn/simple/ 
@@ -93,6 +26,26 @@ str[3:6] ->deh
 eg: pip install scrapy -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 
+
+#### conda和pip
+
+<img src="https://upload-images.jianshu.io/upload_images/12713060-25623c3d88871cdf.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp" alt="img" style="zoom: 50%;" />
+
+[conda中重要的三个概念：环境、通道和包](https://www.cnblogs.com/dadream/p/10820379.html)
+
+[python包管理工具：Conda和pip比较](https://www.jianshu.com/p/5601dab5c9e5)
+
+[Conda 环境的正确使用姿势](https://blog.csdn.net/sigmarising/article/details/89446397)
+
+> 至于你说的那个env的话，是anaconda的虚拟环境，就是你可以创建多个虚拟环境，各个虚拟环境之间的库是不共用的。anaconda的根目录是有一个Python的，如果你没有创建虚拟环境，就可以把库直接安装在该Python下。
+
+`conda`有一个`base(root)`环境，但是自己创建的环境会在Anaconda/env/下
+
+`conda`就是一个通用的包管理工具，和`pip`、`pip3`作用相似，也和`npm`作用相似，`maven`作用相似
+
+`conda env list` 查看conda环境(*Environments*)列表
+
+清华源好像不咋滴:laughing:
 
 #### [使用python中的pymysql模块](https://blog.csdn.net/kelanj/article/details/82792254)
 
@@ -134,4 +87,68 @@ sql = 'insert into interest_pic_tag(interest_tag,pic_tag) values ("%s","%s")'%(i
    5     # list_temp是空的
    ```
 
+2. [各种下划线](https://blog.csdn.net/tcx1992/article/details/80105645)
+
+   > 单个下划线是一个Python命名约定，表示这个名称是供内部使用的。 它通常不由Python解释器强制执行，仅仅作为一种对程序员的提示。
+
+   > \_\_init\_\_()方法又被称为构造器（constructor）
+
+3. str.format()方法这是个基础方法
+
+4. python切片：
+
+   ```python
+   a=10 str(a)   int->string
+   a='10' int(a) float(a)	string->int or float #好像3.0版本后就没有了long()？
    
+   str="adedehny"
+   str[0:2] -> ad
+   str[3:6] ->deh
+   
+   ```
+
+   对比Java
+
+   ```java
+   int->String		i+""   or     String.ValueOf(i)
+   String->int		Integer.ParseInt(str)    
+   ```
+
+5. 一些基础的语法事例，直接快速学习
+
+   ```python
+   def filter(l):	# def表示定义函数
+       x=[]
+       for i in range(0,len(l)):	# len()表示获取数组长度
+           if l[i]%2!=0:
+               x.append(l[i])	# 追加
+       return x
+   ```
+
+   
+
+#### :star:python上的正则化要学习
+
+
+
+#### 对`self`的理解
+
+```py
+class Test:
+	def prt(self):
+		printf(self)
+
+t=Test()
+t.prt()   -> Test.prt(t) 这种方式更接近本质
+```
+
+- self可以不写吗？
+
+> 在python解释器内部，**当我们调用`t.prt()`时，实际上Python解释成`Test.prt(t)`**，也就是说把self替换成类的实例
+>
+> https://www.zhihu.com/question/39264541/answer/685673258
+
+- 个人理解
+
+1. <u>python将类的实例以类中**参数**(self)的形式独立出来</u>，如上面的`Test.prt(t)`，最终始终调用的是Test类而非其实例t。 若实例的方法不传self，则会自行调用传self，这算是python的一个语法糖了。
+2. 在类中方法的参数中加上self，表明这是一个**实例方法**，而非类方法。这是一个简单实用的理解方法:joy:

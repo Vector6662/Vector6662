@@ -78,3 +78,40 @@ actual step则为第一动量除以第二动量
 
 
 
+>  `Dense`层就是所谓的全连接神经网络层
+
+> 模型需要知道它所期望的**输入**的尺寸。出于这个原因，顺序模型`sequential`中的第一层（**且只有第一层**，因为下面的层可以**自动地**推断尺寸）需要接收关于其输入尺寸的信息。
+
+
+
+#### **理解**`input_dim`和`input_shape`
+
+**其实官网上的解释已经很清楚了**：
+
+> 某些 2D 层，例如 `Dense`，支持通过参数 `input_dim` 指定输入尺寸，某些 3D 时序层支持 `input_dim` 和 `input_length` 参数
+
+也就是说`input_dim`是用来指定一维张量或说n维向量的输入的，而`input_shape`是用来指定n维张量的输入的，功能更强大。
+
+为什么不好好读文档！！！
+
+example:
+
+`input_shape=(100,64,32)`表示这是一个100x64x32的3维张量
+
+`input_dim=784`表示输入是784维向量，也就是一维张量，也可以表示为`input_shape=(784,)`
+
+
+
+> 如果你需要为你的输入指定一个固定的 batch 大小（这对 stateful RNNs 很有用），你可以传递一个 `batch_size` 参数给一个层。如果你同时将 `batch_size=32` 和 `input_shape=(6, 8)` 传递给一个层，那么每一批输入的尺寸就为 `(32，6，8)`。
+
+意思就是，`input_shape`和`input_dim`都是指定**数据量**的张量维度，而`batch_size`用来“静态”地指定样本量的维度。如一个彩色图片的输入应该为`input_shape=(64,64,3)`。
+
+
+
+##### 关于张量`tensor`，请好好读[这篇文章](https://blog.csdn.net/ztf312/article/details/72859014?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase)
+
+> [[1],[2],[3]] 这个张量的shape为（3,1）或写作3x1-->2维张量（因为有3、1两个数字:joy:）
+> [[[1,2],[3,4]],[[5,6],[7,8]],[[9,10],[11,12]]]这个张量的shape为（3,2,2）或写作3x2x2-->3维张量
+> [1,2,3,4]这个张量的shape为（4，） 或写作4-->2维张量
+
+感觉生活中说的二维三维都是说的向量，他们都是一维张量

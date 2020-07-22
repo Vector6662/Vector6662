@@ -2,9 +2,9 @@
 
 #### git和GitHub之间的区别 
 
-**>** *Git是一款免费、开源的分布式版本控制系统;*
+> Git是一款免费、开源的分布式版本控制系统
 
-**>** *Github是用Git做版本控制的代码托管平台*
+> Github是用Git做版本控制的代码托管平台
 
 
 
@@ -183,3 +183,5 @@ $ git commit -am "变更的说明信息"
 #### [git报错：Pull is not possible because you have unmerged files解决方法](https://www.cnblogs.com/zhujiabin/p/10148803.html)
 
 >  在git pull的过程中，如果有冲突，那么除了冲突的文件之外，其它的文件都会做为staged区的文件保存起来。
+
+> 说明本地和远程的东西同时修改了workspace.xml文件，直接还原本地即可

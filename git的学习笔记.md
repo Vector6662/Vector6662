@@ -192,6 +192,30 @@ $ git commit -am "变更的说明信息"
 
 
 
+#### 一次commit内容太多导致的问题解决方案
+
+首先用`git remote -v`来查看提交的地址信息，可能是这样的：
+
+```
+$ git remote -v
+origin  https://github.com.cnpmjs.org/Vector6662/Vector6662.git (fetch)
+origin  https://github.com.cnpmjs.org/Vector6662/Vector6662.git (push)
+```
+
+接下来就是修改地址远端地址的信息了：
+
+```
+git remote set-url origin http://github.com/Vector6662/project-remote-sense
+```
+
+主要是关注协议，目前用http是可以提交的，**可能除此之外还要配置缓存大小**
+
+除此之外也要修改下域名，不要那个啥cnpmjs，不知道这是啥东东。
+
+> github.com.cnpmjs.org
+
+哦，这是个代理，GitHub的镜像网站，大概实国内的。所以也许可以只改协议为http即可！
+
 
 
 #### 使用JetBrain系列管理git仓库

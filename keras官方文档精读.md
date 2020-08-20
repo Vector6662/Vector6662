@@ -74,9 +74,9 @@ actual step则为第一动量除以第二动量
 
 
 
+#### Metrics
 
-
-> 评价函数和 [损失函数](https://keras.io/losses) 相似，只不过评价函数的结果不会用于训练过程中。
+> 评价函数和 [损失函数](https://keras.io/losses) 相似，**只不过评价函数的结果不会用于训练过程中**。
 
 这句话的意思应该是*Metrics*不会参与优化
 
@@ -146,7 +146,7 @@ example:
 
 :disappointed: ​**input_length**: 这个参数最难理解，过分难，[深度学习中Keras中的Embedding层的理解与使用](https://blog.csdn.net/sinat_22510827/article/details/90727435?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param)这篇文章中阐释得非常好！
 
-> input_length：这是输入序列的长度，就像您为Keras模型的任何输入层所定义的一样，**也就是一次输入带有的词汇个数**。例如，如果您的所有输入文档都由1000个字组成，那么input_length就是1000。
+> input_length：这是输入**序列**的长度，就像您为Keras模型的任何输入层所定义的一样，**也就是一次输入带有的词汇个数**。例如，如果您的所有输入文档都由1000个字组成，那么input_length就是1000。
 
 当然大部分情况下一个句子的长度是不固定的，比如“天霸动霸tuang”和“灰鸡公尾灰”两句话的`input_length`分别为5、6，需要预处理序列化为固定长度的输入(`pad_sequences()`)。所以才会有[官网](https://keras-zh.readthedocs.io/layers/embeddings/)文档上的说明：
 
@@ -178,7 +178,7 @@ example:
 
 > :star::star::star:  当模型训练完后，最后得到的其实是**神经网络的权重**，比如现在输入一个 x 的 one-hot encoder: [1,0,0,…,0]，对应刚说的那个词语『吴彦祖』，则在输入层到隐含层的权重里，只有对应 1 这个位置的权重被激活，这些权重的个数，跟隐含层节点数是一致的，从而这些权重组成一个向量$$v_x$$ 来表示x，而因为每个词语的 one-hot encoder 里面 1 的位置是不同的，所以，这个向量 $$v_x$$ 就可以用来唯一表示 $$x$$。
 
-上面加粗的 神经网络的权重 更准确说应该是**神经网络的权重向量构成的矩阵！**
+上面加粗的 神经网络的权重 更准确说应该是**神经网络的权重向量构成的矩阵！**即**权重矩阵**
 
 这句引用非常之关键，再解读一下那就是这个模型的输出层结果没啥大用，就只是为了计算并降低损失函数而已，仅此而已。最终我们要的其实是这个权重向量。
 
@@ -215,3 +215,24 @@ example:
 如果用keras来搭建dense的话，`batch_size`则为4，因为图中有4个用户(A, B, C, D)；`input_dim`为2，或者直接`input_shape=(2,)`
 
 在[万物皆可embedding](https://zhuanlan.zhihu.com/p/109935332)一文中提到的$$Deep\,\,Neural\,\,Networks\,\,for\,\,YouTubeRecommendations$$模型，解决了我的一个疑问：$$User\,\,Matrix$$如何得到呢？是通过召回模型得到的。
+
+
+
+#### RNN循环神经网络
+
+- [一文搞懂RNN（循环神经网络）基础篇](https://zhuanlan.zhihu.com/p/30844905)
+
+  这篇文章无意之中让我对以前忽视的隐含层的偏置值$$\,bias\,$$有了一定的理解。以前总以为其实隐含层重点就只在于构造出权重矩阵，它其中的神经元是没有啥值的意义的，不像输入层一样每一个神经元都有一个值。但是！我忽视了$$\,bias\,$$！，它其实就是每个神经元的值！
+
+  - [每个神经元为什么要加上偏置？](https://blog.csdn.net/xwd18280820053/article/details/70681750)、[神经网络中偏置的作用](https://blog.csdn.net/mmww1994/article/details/81705991)
+
+    > 如果没有偏置的话，我们所有的分割线都是经过原点的，但是现实问题并不会那么如我们所愿.都是能够是经过原点线性可分的。
+
+    > 偏置值允许将激活函数向左或向右移位
+    >
+    > 改变w0的值就是改变sigmoid函数的陡峭程度，如果想让x=2时，输出值为0，**只改变wo的不同取值是无济于事的**，你需要把曲线往右移动。我们加入偏置...
+
+- [Keras 函数[TimeDistributed]理解](https://blog.csdn.net/gukedream/article/details/86539640?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param)
+
+  > 这样就实现了张量的**批量降维**
+

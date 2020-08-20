@@ -82,7 +82,7 @@ sql = 'insert into interest_pic_tag(interest_tag,pic_tag) values ("%s","%s")'%(i
    ```python
    1 list_temp = []
    2 if list_temp:
-   3     # 存在值即为真
+   3     # 存在值即为真。这句话有点哲学感:joy:
    4 else:
    5     # list_temp是空的
    ```
@@ -95,37 +95,42 @@ sql = 'insert into interest_pic_tag(interest_tag,pic_tag) values ("%s","%s")'%(i
 
 3. str.format()方法这是个基础方法
 
-4. python切片：
+4. python数据类型转换，感觉比Java中的直观得多：
 
    ```python
-   a=10 str(a)   int->string
-   a='10' int(a) float(a)	string->int or float #好像3.0版本后就没有了long()？
-   
-   str="adedehny"
-   str[0:2] -> ad
-   str[3:6] ->deh
-   
+   a=10 str(a)   				int->string
+   a='10' int(a) float(a)		string->int or float #好像3.0版本后就没有了long()？
    ```
-
+   
    对比Java
-
+   
    ```java
    int->String		i+""   or     String.ValueOf(i)
-   String->int		Integer.ParseInt(str)    
+String->int		Integer.ParseInt(str)    
    ```
 
-5. 一些基础的语法事例，直接快速学习
+5. java切片
 
    ```python
-   def filter(l):	# def表示定义函数
-       x=[]
-       for i in range(0,len(l)):	# len()表示获取数组长度
-           if l[i]%2!=0:
-               x.append(l[i])	# 追加
-       return x
+   words="adedehny"
+   words[0:2] -> ad
+   words[3:6] ->deh
    ```
-
    
+   words[m:n]**切片范围为[m,n)**
+   
+6. 一些基础的语法事例，直接快速学习
+
+```python
+def filter(l):	# def表示定义函数
+    x=[]
+    for i in range(0,len(l)):	# len()表示获取数组长度
+        if l[i]%2!=0:
+            x.append(l[i])	# 追加
+    return x
+```
+
+7. ## [一文详解python的类方法，普通方法和静态方法](https://www.cnblogs.com/jayliu/p/9030725.html)
 
 #### :star:python上的正则化要学习
 

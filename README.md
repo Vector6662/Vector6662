@@ -292,6 +292,39 @@ sql.append(" LIMIT ").append(currentPage).append(",").append(pageSize);
 
 
 
+##### *2020/9/8 Monday*
+
+1. 感觉可以试着在自己的系统上安装一个docker，因为现在的服务器越来越多，非常不方便管理；
+2. 调研Redis的同时在进行电磁组的社团划分和关键节点，后者优先级高些。需要解决的问题是：
+   - Spring Boot的跨域问题，标准化、系统化解决方案
+   - 尝试二次封装redis框架，类似yzz公司的CommonBean这类对ORM支持友好的bean
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

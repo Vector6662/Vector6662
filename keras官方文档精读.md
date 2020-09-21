@@ -258,3 +258,82 @@ example:
 
   3. > 这里要注意选大哥的方法是每个人X坐标的平均值和Y坐标的平均值组成的新的点，为新大哥，也就是说这个大哥是“**虚拟的**”...
 
+
+
+
+
+
+
+
+
+#### CNN学习
+
+- [【子豪兄】深度学习之卷积神经网络](https://www.bilibili.com/video/BV1AJ411Q72b?from=search&seid=13226986090752640872)
+
+  1. <img src="C:\Users\liuhaodong\AppData\Roaming\Typora\typora-user-images\image-20200921203724363.png" alt="image-20200921203724363" style="zoom:50%;" />
+
+     看了这张图感觉CNN算是一种**表示学习**？因为最终都是提取了**特征图**这个东西，最终都是要拿到全连接层进行训练。
+
+     为什么说是表示学习？来自刘老师的口述：（记录可能有些遗漏）
+
+     > 深度学习区别于表示学习，表示学习对特征进行了提取
+     >
+     > 如像素图片用openCV做了个啥啥啥；TransE做的是h+r=t做损失函数、图表示学习
+
+  2. 基本流程：卷积+池化+卷积+池化+全连接+全连接
+
+     - 卷积层：提取图像的底层特征。简单来说，是将大像素的图像变成小的输出。（专业点说是**特征映射**？）
+     - 池化层用于防止过拟合，并将数据维度减小
+     - 学习目标是优化卷积核
+
+  3. **卷积核**：可以理解为映射关系$$f$$！！而原始图像像素矩阵就相当于一个输入了，
+
+     卷积核为$$n \times n$$，对应的感受眼也得是$$n \times n$$，每一次只映射出一个像素点。
+
+     一个卷积核生成一个feature map。
+
+     输出结果成为**feature map**。若有多个卷积核，那么就会生成多个feature map，即**多通道。**
+
+     <img src="C:\Users\liuhaodong\AppData\Roaming\Typora\typora-user-images\image-20200921205939473.png" alt="image-20200921205939473" style="zoom:50%;" />
+
+  4. 池化（pooling）（下采样）：对feature map每个局部$$m \times m$$选择代表值，最大池化（最常用，有效防止过拟合）、平均池化。
+
+     作用：
+
+     - 减少参数量，防止过拟合
+     - 减少参数的数据量的同时，保留数据的原始特征
+     - 来带平移不变性
+
+  <img src="C:\Users\liuhaodong\AppData\Roaming\Typora\typora-user-images\image-20200921214351059.png" alt="image-20200921214351059" style="zoom:50%;" />
+
+  5. padding：防止像素边缘的特征被忽略掉，卷积眼
+
+- [Convolution Visualizer](https://ezyang.github.io/convolution-visualizer/index.html)
+
+  参数解释：
+
+  1. input size:  输入矩阵$$n \times n$$
+  2. kernel size: 卷积核$$m\times m$$
+  3. padding:
+  4. dilation（棋盘）:跨像素的感受眼
+  5. stride（步长）:
+
+- 多通道
+
+  以RGB图像为例，输入为$$m \times n \times 3$$，3维张量，则卷积核应该为$$p \times q \times 3$$，这个时候就是多通道了（这里是3通道）。
+
+  ##### 一句话，有多少个卷积核就有多少个feature map
+
+  多通道是输入矩阵带来的，3通道的输入会导致卷积核也是三通道的，同时注意还是只能得到一个feature map
+
+  <img src="C:\Users\liuhaodong\AppData\Roaming\Typora\typora-user-images\image-20200921213829112.png" alt="image-20200921213829112" style="zoom:50%;" />
+
+6. 其实我觉得卷积层和池化层的区别应该是卷积核的策略不同吧，卷积层相当于使用了权重和每个像素点相乘，而池化层只是找到像素点的平均或者最大值啥的
+
+##### 可以这么理解吗，卷积就是矩阵的全连接，而普通的全连接默认的是向量的
+
+
+
+- 
+- 卷积层提取出图像的局部特征，如下
+- ![image-20200921223607563](C:\Users\liuhaodong\AppData\Roaming\Typora\typora-user-images\image-20200921223607563.png)

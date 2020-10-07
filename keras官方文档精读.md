@@ -173,7 +173,7 @@ example:
 
 对于NLP模型，输入用张量形式表示为：(句子样本数, 每个句子的长度`input_length`, 句子中每个词向量的维度`input_dim`)
 
-##### 再理解一下`Word2Vector`
+#### 理解`Word2Vector`
 
 - https://zhuanlan.zhihu.com/p/26306795
 
@@ -203,13 +203,53 @@ example:
 
 
 
-对文中`3.2.1`的那张图得有这样的理解才算到位：
+对文中`3.2.1`的那张图得有下面这样的理解才算到位：
 
 <img src="https://pic3.zhimg.com/80/v2-a1a73c063b32036429fbd8f1ef59034b_720w.jpg" alt="img" style="zoom:67%;" />
 
 输入层是个独热向量，然而输出层是每一个神经元都是有值的，而非输入层这样独热的，表示的是**概率分布**(因为是onehot嘛，其中的每一维斗都代表着一个单词)，优化的方法和普通的神经网络的优化方式是一样的，如SGD，Nestrov，Momentum等。
 
-##### 结合协同过滤模型
+
+
+#### 再次理解word2Vector
+
+- [一文详解 Word2vec 之 Skip-Gram 模型（结构篇）](https://blog.csdn.net/qq_24003917/article/details/80389976)
+
+> 当这个模型训练好以后，我们并不会用这个训练好的模型处理新的任务，我们真正需要的是这个模型通过训练数据所学得的参数，例如隐层的权重矩阵——后面我们将会看到这些权重在Word2Vec中实际上就是我们试图去学习的“word vectors”。
+
+也就是说隐含层的输出维度n维才是我们的最终目的。先前的对word2vec我也强调过这一点，足以见得这个观点的重要性。
+
+输入一个one-hot编码的单词维度为m，然后接入一个dense层，维度为n，也就是说这时的**权重矩阵**为mxn。这是一定的，输出为n维矩阵也是一定的。
+
+> **所以我们最终的目标就是学习这个隐层的权重矩阵。**
+
+如果这篇博客只有一句不是废话，那么一定是这一句。
+
+文中还提到了计算这个极高维度的input（100000维甚至更高）的one-hot向量和权重矩阵相乘的低效问题的解决方法，总结一下就是：**检查表**。查找对应one-hot输入为1的 $$i$$ 列对应的权重矩阵的i行即可，这变得异常easy了：
+
+![一文详解 Word2vec 之 Skip-Gram 模型（结构篇）](https://static.leiphone.com/uploads/new/article/740_740/201706/594b322ae0c72.png?imageMogr2/format/jpg/quality/90)
+
+> 。。。这样模型中的隐层权重矩阵便成了一个”查找表“（lookup table），进行矩阵计算时，直接去查输入向量中取值为1的维度下对应的那些权重值。隐层的输出就是每个输入单词的“嵌入词向量”。
+
+关于输出层：
+
+![一文详解 Word2vec 之 Skip-Gram 模型（结构篇）](https://static.leiphone.com/uploads/new/article/740_740/201706/594b31d0920ef.png?imageMogr2/format/jpg/quality/90)
+
+注意一下输出层是一个和Input同样维度的向量就行，因为这是 $$softmax$$ 的分类器。
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### 结合协同过滤模型
 
 上面的 $$embedding$$ 和协同过滤的原理相似，感觉都是进行反推或说逆向操作。在协同过滤模型中，$$Rating\,\,Matrix$$矩阵其实是最终的优化标准（目标），而通过训练得到的其实是全连接层的参数：
 
@@ -295,7 +335,7 @@ example:
 
      卷积核为$$n \times n$$，对应的感受眼也得是$$n \times n$$，每一次只映射出一个像素点。
 
-     一个卷积核生成一个feature map。
+     一个卷积核生成一个feature map（下图中的output）。
 
      输出结果称为**feature map**。若有多个卷积核，那么就会生成多个feature map，即**多通道。**
 

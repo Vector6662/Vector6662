@@ -379,7 +379,7 @@ deadline是明天的任务：（恰好deadline都是周一6点之前）
 
 清单，整理放假前列出的任务：
 
-1. 工程伦理PPT提醒:exclamation:英语
+1. 工程伦理PPT提醒:exclamation:（已完成）
 2. 各位同学，人大芸窗第一套练习将在本周日晚关闭，请大家尽早完成。切勿拖延至最后一天，以免提交数量过多，容易拥堵、出问题。（已完成）
 
 
@@ -389,6 +389,83 @@ deadline是本周六的任务：
 1. 关系抽取（应付完成了）
 2. 本体库树状展示
 
+##### *2020/10/12 Monday*
+
+任务清单：
+
+1. 调研三大学报
+2. 英语口语预约（已完成）
+3. 工程伦理PPT:exclamation::exclamation::exclamation:（已完成）
+4. 前端布局学习，可以引入node
+5. 英语网课练习，一个U校园，一个C班的网课
+
+
+
+明天之内完成的任务：
+
+1. $$Event Extraction via Dynamic Multi-Pooling Convolutional Neural
+   Networks$$论文阅读
+
+
+
+##### 2020/10/19 Monday
+
+1. 发现一个介绍多数据源的文章：https://blog.csdn.net/wenlt/article/details/80817255
+2. 还是使用node来管理项目，不再使用原始的导包的方式了，在看poperJS的文档的时候发现已经它的官网上说明这是被不建议的方式
+
+
+
+##### 2020/10/23 Friday
+
+离开实验室后需要尽快完成的作业和开始的学习计划：
+
+作业：
+
+1. 工程伦理，提交PPT和案例分析报告；网课（网课看完，还未提交作业）
+2. 中特的网课（finished）
+3. 人大芸窗作业:exclamation:（finished）
+4. 算法分析作业
+5. 网络编程好像有作业
+
+
+
+zwz师兄的推荐：
+
+1. 推荐的书籍：:star:《深度学习与神经网络 邱希鹏》、《精力管理》
+2. 链接：[pingcap](https://university.pingcap.com/talent-plan/)、[一技之长的命运](https://zhuanlan.zhihu.com/p/65134554)、[Mozilla裁员](https://www.zhihu.com/question/413627046/answer/1411110470)、[稀缺：我们是如何陷入贫困的？](https://weread.qq.com/web/reader/36b321405d05b236bb0ce7d)
+3. points：“测试驱动开发”、pingcap、白非力
+
+个人学习规划：
+
+总的应该偏向**开发**，这是最首要的，而不是发论文。但是如何量化我的成果非常重要，因为如果是发论文的话一篇顶会就是很好的量化标准，然而做开发的量化标准就很迷糊了，但其中有一个量化标准是LeeCode上的刷题数量，这是公认的量化标准。但是如果做前端和后台的量化标准又是什么呢？暂时先是我开发完整的项目的数量？GitHub上的贡献度？另外还有机器学习，我认为还是不要放下，单纯觉得挺有趣的，毕竟这是未来趋势。
+
+以下是ddl为这周天的：
+
+1. 看完网易云课堂的的[bootstrap课程](https://study.163.com/course/courseMain.htm?courseId=1005454015&_trace_c_p_k2_=07b83cb889934900be7e3064213395b7)，引入nodejs
+2. nodejs基础的一些指令已经学会了，现在可以尝试进阶，找一下思路
+3. 如果可以的话，可以开始刷LeeCode了
+
+
+
+##### 2020/10/26 Monday
+
+1. conda的清华镜像已经不能用了，要换成中科大的，而且速度很快
+
+
+
+##### 2020/10/27 Tuesday
+
+1. python中魔法方法是什么？
+
+2. *[Ellipsis](https://zhuanlan.zhihu.com/p/63909763)*，听起来很高端
+
+3. <img src="C:\Users\liuhaodong\AppData\Roaming\Typora\typora-user-images\image-20201027210541774.png" alt="image-20201027210541774" style="zoom:25%;" />
+
+   如何理解此图？
+
+4. log_softmax()和softmax()区别在哪里，为什么用了log_softmax()作为激活函数了损失函数就要用NLLLoss()？[这篇文章写的很好](https://blog.csdn.net/qq_28418387/article/details/95918829)
+
+5. 正则化和归一化
 
 
 
@@ -406,22 +483,9 @@ deadline是本周六的任务：
 
 
 
+#### regular schedule（expired）
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+1. 单据识别群周期性检查进度（abandon）
 
 
 

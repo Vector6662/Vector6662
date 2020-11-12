@@ -50,11 +50,50 @@ dim这个参数很重要，如果不加这个参数的化则对整个张量取ma
 
 #### Ellipses
 
+- [10个不为人知的 Python 冷知识](https://zhuanlan.zhihu.com/p/63909763)
+
+  >据说它是Numpy的语法糖，不玩 Numpy 的人，可以说是没啥用的。在网上只看到这个 用 ... 代替 pass ，稍微有点用，但又不是必须使用的。
+
+- [Python 的 Ellipsis 对象](https://farer.org/2017/11/29/python-ellipsis-object/)，这里面说得就比较详细了，从他的描述中发现这个只是一个很鸡肋的语法糖
+
+- [来源](https://www.cnblogs.com/zhuyunbk/p/11452921.html)：
+
+  ![img](https://pic3.zhimg.com/80/v2-b4e4d2118b0de6f45af3c96af05a7f59_hd.png)
+
+  ​	给我翻译翻译：
+
+  - 作为尚未编写的代码的占位符（比如`if error: ....`），但故意空着的的代码最好用`pass`
+
+  - （:exclamation: 没怎么看懂）当用类型模块（如`Callable[..., str]`）指定代码提示（*type hints*）的时意味着一个 function会返回一个string类型但是不会指定call signature
+
+  - 作为默认参数值（如`def fn(x=...)`），尤其是你想在不传递参数值和传递`None`值上做区分
+
+    因为`...`是一个单例，你应该用`is`来检查而不是`==`
+
+
+
+#### Type Hints
+
+上面的问题引入了type hints这个知识点
+
+For example, here is a simple function whose argument and return type are declared in the annotations:
+
+```python
+def greeting(name: str) -> str:
+    return 'Hello ' + name
+```
 
 
 
 
-#### [这篇文章写的很好](https://blog.csdn.net/qq_28418387/article/details/95918829)详细讲解了log_softmax和NULLLoss的关系，和比较厉害的CrossEntropyLoss()
+
+
+
+#### log_softmax、NULLLoss和CrossEntropyLoss()
+
+- [这篇文章写的很好](https://blog.csdn.net/qq_28418387/article/details/95918829)详细讲解了log_softmax和NULLLoss的关系，和比较厉害的CrossEntropyLoss()
+
+  其实损失函数基本来说就两个：**交叉熵损失函数（CrossEntropyLoss）**和**均方差损失函数（MSELoss**），分别用于分类问题和回归问题，其他的损失函数都是这两个的变种。
 
 
 
@@ -66,3 +105,38 @@ dim这个参数很重要，如果不加这个参数的化则对整个张量取ma
 
 [虽然输入的训练数据是默认不求导的，但是，我们的 model 中的所有参数，它默认是求导的，这么一来，其中只要有一个需要求导，那么输出的网络结果必定也会需要求的。来看个实例：](https://zhuanlan.zhihu.com/p/67184419)
 
+
+
+
+
+
+
+
+
+
+
+### python基础
+
+#### lambda表达式：
+
+- https://www.cnblogs.com/lida585/p/10375819.html
+
+  ```python
+  a = [('a',1),('b',2),('c',3),('d',4)]
+  a_1 = list(map(lambda x:x[0],a))   # 注意第二个参数要是可迭代的
+  ```
+
+  > map函数第一个参数是一个lambda表达式，**输入一个对象，返回该对象的第一个元素**。第二个就是需要作用的对象，此处是一个列表
+
+  我现在倒是看明白了哈哈哈哈！原来`lambda x:x[0]`中的x只是**形参**，**而后面的a才是实参**！！！哈哈哈
+
+  其实完全可以改写为：
+
+  ```python
+  a = [('a',1),('b',2),('c',3),('d',4)]
+  def f(x):
+      return x[0]
+  f(a)
+  ```
+
+  看到没有，lambda表达式只是把函数申明和调用换了一种写法而已把需要多行解决的问题改到一行解决，看起来简洁一些。

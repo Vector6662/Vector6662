@@ -509,6 +509,124 @@ zwz师兄的推荐：
 
 
 
+##### 2020/11/13 Friday
+
+找到一个新的方向，值得研究：**Netty**，这是一种成熟的NIO框架（此外还有Mina），至于什么是NIO，还需要进一步调研
+
+这个方向目前看来是比较适合现在的我的，因为已经有点接触计算机的一些基本概念了，比如我之前纠结了很久的异步和同步问题
+
+
+
+##### 2020/11/15 Sunday
+
+1. Spring事件监听机制，这也是一个需要补充的知识。目前知道的是能够实现异步消息，我目前还发现消息队列的方式似乎是目前最好的解决高并发的解决方案，架构简单并且有效。
+
+
+
+##### 2020/11/16 Monday
+
+1. 在学习Adaptor模式的时候接触到了Runnable和Callable两个类，文档中对Callable的解释是：
+
+   >A task that returns a result and may throw an exception. Implementors define a single method with no arguments called call.
+   >The `Callable` interface is similar to `Runnable`, in that both are designed for classes whose instances are potentially executed by another thread. A Runnable, however, does not return a result and cannot throw a checked exception.
+   >The `Executors` class contains utility methods to convert from other common forms to Callable classes
+
+   > （Callable适用于）一个会返回结果并且抛出异常的任务。实现该接口的类们要定义一个没有参数的方法，这个方法名是call。
+   >
+   > 这个Callable接口和Runnable接口很像，因为他们都为需要被其他线程执行的类的实例而设计。然而Runnable不会返回结果也不会抛出异常。
+   >
+   > Executors类包含很多实用的方法来将常见形式的类转换为Callable类
+
+   然后我也发现Runnable类一般和Thread类搭配，而Callable类一般和Future类搭配。[这篇文章](https://www.cnblogs.com/syp172654682/p/9788051.html)写得很好，但是现在需要思考的问题是，既然使用Future的方式是阻塞的，那为啥还需要采用那么复杂的方式呢，直接在主线程里面顺序写然后顺序执行不就完了？
+
+2. 接下来的学习规划我觉得还需要具体明确一下， 现在有些抓不到缰了，因为技术太多。
+
+   目前能想到的方向是:one:Netty，已经继续看:two:设计模式，因为学习过程中衍生出的知识点真的太丰富了！
+
+3. 至于机器学习，我现在还没找到足够的学习理由
+
+
+
+##### 2020/11/19 Thursday
+
+1. [中间件开发](https://bugstack.cn/itstack-ark-middleware/2019/12/08/%E5%BC%80%E5%8F%91%E5%9F%BA%E4%BA%8ESpringBoot%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E4%B8%AD%E9%97%B4%E4%BB%B6DcsSchedule(%E4%B8%BA%E5%BC%80%E6%BA%90%E8%B4%A1%E7%8C%AE%E5%8A%9B%E9%87%8F).html)这似乎是一个很好的例子，但是很难。所以这里只是一个备忘录，现在需要攻克的还是Netty和设计模式
+2. BTW，口腔溃疡解决方案：VB族（记得买）+修复肝脏（少碳水，多鱼肉豆奶蛋 蛋白质）
+3. 如果我要学习Java，我觉得我需要找一个方向深挖，感觉成为一个通才不算是一个好的方向，而是成为专才
+
+
+
+##### 2020/11/20 Friday
+
+1. 我对Netty的学习有些怀疑，其实还是在学怎么调用这个框架，但是这个真的那么重要吗，感觉掌握原理即可，我觉得还是将重点放在比较基础的东西，比如设计模式，以及对Spring源码的阅读上面。
+
+
+
+##### 2020/11/25 Wednesday
+
+1. 暂时放弃spark，因为这应该是一个系统性的知识，不像学习Netty一样，而是另外一个技术栈了。
+
+2. 尽快明确学习的方向，该方向至少持续时间是下学期开学。目前的计划，可能得开始刷LeeCode了，然后Spring的内核阅读也是关键，以及设计模式，现在设计模式遇到了瓶颈，可能有些功利，有些听起来陌生的设计模式就没有兴趣看下去，这样不好，不好。
+
+   总之，以上三个任务算是最近的学习重点。另外，Netty当作休闲的技术学习，因为目前看起来不会太难了，主要跟着那个视频学习就行。
+   
+3. [前后端分离项目，如何解决跨域问题](http://www.macrozheng.com/#/technology/springboot_cors)
+
+4. 其实，我发现我chrome的归档文件夹里面还是有很多的知识点，够我学了。
+
+
+
+
+
+##### 2020/11/29
+
+1. 正在学习[Java多线程](https://zhuanlan.zhihu.com/p/57482990)，记录一下一些线索：
+   - `synchronized`保留字我的理解是表明当前对象的这个方法（或类的静态方法）只能由一个线程独享。这篇文章提到的锁其实是个对象，我的认为可以再细化，其实是一个对象的一个信息，也就是对象或类的锁i信息，表明该对象现在正在被哪个线程所占用
+   - 注意区别静态方法和普通方法的锁
+   - 其实我认为线程也可也看成是一个对象嘛，`synchronized`关键之表明一个对象只能被一个线程对象独享
+   - 粗浅看了一下`ThreadLocal`类，我感觉其实是实现线程专属资源的类
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #### regular schedule（expired）
 
 1. 单据识别群周期性检查进度（abandon）

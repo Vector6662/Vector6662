@@ -1,3 +1,5 @@
+### 零碎知识：
+
 ##### Java时间格式
 
 [这篇文章](https://www.cnblogs.com/zhengwanmeixiansen/p/7391411.html)
@@ -70,11 +72,13 @@ Arrays.asList(T[] array);
 
 > 定义的泛型类，就一定要传入泛型类型实参么？在使用泛型的时候如果传入泛型实参，**则会根据传入的泛型实参做相应的限制**，*此时泛型才会起到本应起到的限制作用*。如果不传入泛型类型实参的话，在泛型类中使用泛型的方法或成员变量定义的类型可以为**任何的类型**。
 
-2. 主要难点还是[**泛型方法**](https://blog.csdn.net/weixin_43819113/article/details/91042598)
+2. [**泛型方法**](https://blog.csdn.net/weixin_43819113/article/details/91042598)
+
+   这是主要的难点！
 
 > 与类，接口中泛型参数不同的是，方法中的泛型参数**无须显式**传入实际类型参数，如上面程序所示，当程序调用 fromArrayToCollection() 方法时，无须在调用该方法前传入String、Object 等类型，但系统依然可以知道类型参数的数据类型，因为**编译器根据实参推断类型实参的值**，它通常推断出最直接的类型参数。
 
-这应该指的是**类型推导**
+这应该指的是**类型推导**:stars:
 
 ```java
 //这是一个泛型方法，<T>就是声明一个方法持有一个类型T   这句话非常重要！！！
@@ -139,22 +143,42 @@ test(as,ao);
 
 ```java
 List list = new ArrayList<>();
-        list.add(11);
-        list.add("dw");
-        list.add(0.154);
-        Map map=new HashMap();
-        map.put(12,12);//相当于python中的字典dict
-        list.add(map);
-        System.out.println(list);//输出[11, dw, 0.154, {12=12}]
+list.add(11);
+list.add("dw");
+list.add(0.154);
+Map map=new HashMap();
+map.put(12,12);//相当于python中的字典dict
+list.add(map);
+System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 ```
 
-这原来也是可以的！也就是其实泛型类是可以不指定类型的`List<String> list=...`，指定类型其实是给自己看的，让自己写代码的时候不至于不小心传错了参数。
+这原来也是可以的！也就是其实泛型类是可以不指定类型的`List<String> list=...`，指定类型其实某种程度上是给自己看的，让自己写代码的时候不至于不小心传错了参数。
 
 
 
+### 设计模式
+
+我认为设计模式的三大类型还是需要搞清楚分类依据的。我大概思考了一下，感觉很有意思：
+
+1. **创建型：**关注如何创建对象，核心：对象的创建和使用相分离；:arrow_right: 如何对象创建
+2. **结构型：**如何组合对象​；:arrow_right: 对象之间的关系
+3. **行为型：**算法（业务逻辑更具体点）和对象间的职责分配；:arrow_right:业务代码和对象间的关系
+
+箭头后面是我自己的话提炼了一下。发现没有，其实这三大类是一个递进关系：首先要创建对象，如何创建？于是有了创建型设计模式；然后创建好了的对象之间的关系，如何组合更优？于是有了结构型；最后将这些对象如何更好地融入业务逻辑中，于是有了行为型。
+
+#### 工厂方法或者抽象工厂
+
+我甚至懒得区分二者之间的差别了，感觉都差不多，区别都不是本质。
+
+我看了好些文章，发现有一个总结比较到位：[抽象工厂模式和工厂模式的区别？ - 黑暗中的灯光的回答 - 知乎]( https://www.zhihu.com/question/20367734/answer/266328444)
+
+> 简单的说，抽象工厂是对简单工厂（工厂方法模式、工厂模式）中的**工厂类进一步抽象成接口**，解决了工厂方法中的硬编码问题，因为以后如有新增新的对象，只要再实现一个对应的工厂类，就完成了扩展。无需修改以前的代码。
+
+简单工厂只抽象了产品，而抽象工厂连工厂也抽象出来了。:star::star::star:这个总结简直很难更好！！！
 
 
-### 设计模式---动态代理
+
+#### 动态代理
 
 1. 不论是动态还是静态代理，目标都是一样的：**代理和目标对象（或说被代理对象）都要实现同一个或多个相通的接口**
 
@@ -197,15 +221,57 @@ List list = new ArrayList<>();
            throws IllegalArgumentException
    ```
 
-   其实第一个参数loader应该随便哪个类，在动态代理下主要还是看interfaces这个参数，必须和目标类相通的接口或者抽象类等。然后就可以构造一个代理类了，不需要手动实现每个
+   其实第一个参数loader应该随便哪个类，在动态代理下主要还是看interfaces这个参数，必须和目标类相通的接口或者抽象类等。然后就可以构造一个代理类了，不需要手动实现每个 
 
-### ***2020/11/7，一个猜测：（待解决）***
+7. > 代理对象的本质就是：和目标对象实现相同接口的实例。代理Class可以交任何名字，whatever，只要他实现某个接口，就能成为该接口类型。
+
+8. 动态代理的作用是什么？
+
+   > 1. Proxy类的**代码量被固定下来**，不会因为业务的逐渐庞大而庞大；（个人感觉这才是最关键的因素，静态代理代码量实在太多。动态代理）
+   > 2. 可以实现AOP编程，实际上静态代理也可以实现，总的来说，AOP可以算作是代理模式的一个典型应用；
+   > 3. 解耦，通过参数就可以判断真实类，不需要事先实例化，更加灵活多变。
+
+9. [这篇文章也是写得好啊](https://www.zhihu.com/question/20794107/answer/151028753)！提到了**通用代理类**这个概念：
+
+   > 只要我们在调用代码处使用这个通用代理类去包装任意想要需要包装的被代理类即可 （拓展思考-优点）
+
+10. 其实我感觉静态代理虽然麻烦但是更加灵活，因为它其实是对类的方法进行代理。而动态代理更是对对象本身进行代理，虽然也可以代理其中的方法，但是显得很麻烦。
+
+11. [和AOP相结合](https://blog.csdn.net/rock154/article/details/80059344)
+
+    > 放到 InvocationHandler 实现类invoke 方法里面的 这些出代码片段就是一个**切面**，本文Demo 中真实业务add() 就是**切入点**。
+
+#### 原型模式
+
+`Cloneable`接口中有这么一段：
+
+> Invoking Object's clone method on an instance that does not implement the Cloneable interface results in the exception CloneNotSupportedException being thrown.
+
+翻译：在一个对象中调用`Object`类的`clone`方法但是没有implement `Cloneable`接口会导致抛出`CloneNotSupportedException`异常。
+
+只提这一句话，好好读读`Cloneable`类的doc，很有意思
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 2020/11/7，一个猜测：（待解决）
 
 学习了一下反射机制，里面提及了`ClassLoader`，目前的看法是应该很多的class文件加载到内存都会共用一个`ClassLoader`，到底用哪个`ClassLoader`是由JVM决定的，但是注意，别用`Object.getClassLoader()`，
 
 线索：
 
-1. 其实`ClassLoader`类才是”老祖宗“，`Class.forName()`其实也是调用`ClassLoader`中的方法来创建class对象的：
+1. 其实`ClassLoader`类才是”老祖宗“，`Class.forName()`其实也是调用`ClassLoader`中的方法来创建（load）class对象的：
 
    > 在Java中`Class.forName()`和`ClassLoader`都可以对类进行加载。`ClassLoader`就是遵循**双亲委派模型**最终调用启动类加载器的类加载器，实现的功能是“通过一个类的全限定名来获取描述此类的二进制字节流”，获取到二进制流后放到JVM中。`Class.forName()`方法实际上也是调用的`CLassLoader`来实现的。
 
@@ -268,46 +334,6 @@ List list = new ArrayList<>();
 
 
 
- 
-
-7. > 代理对象的本质就是：和目标对象实现相同接口的实例。代理Class可以交任何名字，whatever，只要他实现某个接口，就能成为该接口类型。
-
-8. 动态代理的作用是什么？
-
-   > 1. Proxy类的**代码量被固定下来**，不会因为业务的逐渐庞大而庞大；（个人感觉这才是最关键的因素，静态代理代码量实在太多。动态代理）
-   > 2. 可以实现AOP编程，实际上静态代理也可以实现，总的来说，AOP可以算作是代理模式的一个典型应用；
-   > 3. 解耦，通过参数就可以判断真实类，不需要事先实例化，更加灵活多变。
-
-9. [这篇文章也是写得好啊](https://www.zhihu.com/question/20794107/answer/151028753)！提到了**通用代理类**这个概念：
-
-   > 只要我们在调用代码处使用这个通用代理类去包装任意想要需要包装的被代理类即可 （拓展思考-优点）
-
-10. 其实我感觉静态代理虽然麻烦但是更加灵活，因为它其实是对类的方法进行代理。而动态代理更是对对象本身进行代理，虽然也可以代理其中的方法，但是显得很麻烦。
-
-11. [和AOP相结合](https://blog.csdn.net/rock154/article/details/80059344)
-
-    > 放到 InvocationHandler 实现类invoke 方法里面的 这些出代码片段就是一个**切面**，本文Demo 中真实业务add() 就是**切入点**。
-
-
-
-### 设计模式---原型模式
-
-`Cloneable`接口中有这么一段：
-
-> Invoking Object's clone method on an instance that does not implement the Cloneable interface results in the exception CloneNotSupportedException being thrown.
-
-在一个对象中调用`Object`类的`clone`方法但是没有implement `Cloneable`接口会导致抛出`CloneNotSupportedException`异常。
-
-只提这一句话，好好读读`Cloneable`类的doc，很有意思
-
-
-
-
-
-
-
-
-
 
 
 
@@ -337,8 +363,6 @@ List list = new ArrayList<>();
 
 
 ### 快速调研
-
-注解和反射
 
 > spring、mybaties等框架的底层都是基于注解和反射
 
@@ -460,4 +484,72 @@ List list = new ArrayList<>();
   >目标方法的return是整个递归责任链的精华所在，就像一个弹簧,被压到最大限度,开始return了。所以，原路返回，执行每个拦截器`invoke()`方法中两个语句的下一句。
 
   弹簧很形象，开始压弹簧的时候是在执行before链，压到最低点之后便执行目标方法（文中的`target.add()`），最后释放弹簧执行after链。
+
+
+
+
+
+
+
+### 函数式接口：Java 8的新特性
+
+这个概念的定义是非常精辟的：**有且仅有一个抽象方法的的接口**(`Interface类型的类`)
+
+我特么发现，这个所谓的函数式接口不也还是回调吗？？？只不过“有且仅有一个抽象方法”，所以可以用lambda表达式简化而已嘛。
+
+其实可以复盘一下下面的forEach()的调用过程就清楚了：
+
+首先是forEach()的源码：
+
+```java
+default void forEach(Consumer<? super T> action) {
+    Objects.requireNonNull(action);
+    for (T t : this) {
+        action.accept(t);//这是函数式编程的核心部分，只给出调用方式，然后内容（业务逻辑）开发者自己写
+    }
+}
+```
+
+一目了然，本质上还是回调，回调的是action.accept()；
+
+如何调用？实现这个accept方法：
+
+```java
+list.forEach(i->System.out.println(i));
+```
+
+上面的`action.accept(t)`其实最终是调用了这个$$lambda$$表达式。
+
+
+
+参考了[这篇文章](https://www.cnblogs.com/dgwblog/p/11739500.html)，这篇文章爱了爱了​ :heart:
+
+#### 函数引用和lambda表达式
+
+感觉这两个都是语法糖，<u>并且都是为了配合函数式编程才创造的</u>。看两个例子就会了：
+
+```java
+List<Integer> list = new ArrayList();
+list.add(1);list.add(2);
+//lambda表达式的使用
+list.forEach(i->System.out.println(i));
+
+//函数引用
+list.forEach(this::func1);//注意。如果func1是static的，那么就应该是Main::func1，Main是类名
+void func1(int i){
+    System.out.println(i);
+}
+```
+
+lambda表达式目前发现只能用在函数式接口这种场景下，也就是是对**函数式接口的简化，而不是对某个普通方法的简化**。
+
+参考[这篇文章](https://developer.51cto.com/art/202009/627588.htm?pc)
+
+[在Java代码中写Lambda表达式是种怎样的体验？](https://www.zhihu.com/question/37872003/answer/1009015660)这篇文章的这句话真的很精辟：
+
+> 我们使用Lambda表达式创建线程的时候，**并不关心接口名，方法名，参数名**。我们**只关注他的参数类型，参数个数，返回值**。
+
+![img](https://pic2.zhimg.com/80/v2-d4ff58a1bad0b37266d009e7047dec95_1440w.jpg?source=1940ef5c)
+
+
 

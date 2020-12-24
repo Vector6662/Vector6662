@@ -618,11 +618,13 @@ zwz师兄的推荐：
 
 今天有一个知识门都没摸到，那就是Spring的事务，明天继续看:disappointed:。找到的资源应该是这篇文章：[Spring【DAO模块】知识要点](https://mp.weixin.qq.com/s?__biz=MzI4Njg5MDA5NA==&mid=2247483965&idx=1&sn=2cd6c1530e3f81ca5ad35335755ed287&chksm=ebd7433cdca0ca2a70cb8419306eb9b3ccaa45b524ddc5ea549bf88cf017d6e5c63c45f62c6e&scene=21#wechat_redirect)
 
+##### 2020/12/25 :christmas_tree:
 
+学习了SpringBoot的`@EnableAutoConfiguration`自动装配的原理，以及和注解`@ComponentScan`之间的区别
 
+spring事务打算缓几天再看，太难了:cry:
 
-
-
+下一个任务时尝试搞明白IOC容器是如何实现的。
 
 
 

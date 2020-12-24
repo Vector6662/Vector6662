@@ -192,6 +192,8 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 **基于接口代理**。这种方式要求target类要有实现接口。
 
+1. 区别于静态代理，动态代理的这两个方式都是代理（拦截）的方法，是一种粗粒度的
+
 2. 有点意思，似乎所有对象（实例）的父类都是Object，而所有类的父类都是Class对象。[来源](https://www.zhihu.com/question/20794107)
 
    > 所谓的Class对象，是Class类的实例，而Class类是描述所有类的，比如Person类，Student类

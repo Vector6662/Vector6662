@@ -69,11 +69,11 @@
    >
    >采集一组key（严格说是SelectionKey对象），这些key对应的channel已准备好了I/O操作。
    >
-   >该方法执行阻塞的select操作，一下三种条件满足其一，这个方法就会return：（1）至少一个channel被select之后；（2）该selector对象的wakeup方法被调用；（3）当前线程被中断。
+   >该方法执行阻塞的select操作，以下三种条件满足其一，这个方法就会*return*：（1）至少一个channel被select之后；（2）该selector对象的wakeup方法被调用；（3）当前线程被中断。
    >
    >返回值：key的数量，可能为0，这种情况下的ready-operation set被更新了
 
-6. 区别ServerSocketChannel和SocketChannel （或说ServerChannel和Channel）
+6. :star:区别ServerSocketChannel和SocketChannel （或说ServerChannel和Channel）
 
    这个地方我弄混了很久，其实两者是有分工的，前者一般是监听且只监听accept事件，然后将该channel绑定read事件后注册到selector上，表示我接受、同意了你的连接。也就是说，一般一个服务器就一个或者几个ServerSocketChannel，然后调用accept方法得到每一个客户端的channel（SocketChanel的子类）并注册到selector中，每一个socketchannel代表一个客户端的连接。	
 
@@ -86,9 +86,9 @@
 
    > read全部读完了才会通知serviceHandler 
 
-   评论区还是有高手的:joy:。目前感觉这一点就是Reactor模式的精髓，将耗时操作（比如读取数据`read()`）与业务进程（handler）相剥离，这样handler内部就不会有等待了
+   评论区还是有高手的:joy:。目前感觉这一点就是Reactor模式的精髓，**将耗时操作（比如读取数据`read()`）与业务进程（handler）相剥离，这样handler内部就不会有等待了。**
 
-9. Netty模型
+9. Netty模型:star:
 
    - Netty模型其实就是对NIO的封装发，有一个bossGourp和一个workerGroup，bossGroup中的ServerSocketChannel的interest operation只有ACCEPT_OP，[这篇文章](https://zhuanlan.zhihu.com/p/181239748)写得很不错。
 
@@ -97,13 +97,21 @@
 
    - 和第6点很像。一个BossGroup中的selector只关心accept方法，接收到该事件后将相应的channel封装成NIOSocketChannel后注册到WorkerGroup（和BossGroup一样都是线程）中，监听到如read事件后调用handler。注意handler已经加入到channel中。
 
-   
+   - 个人的一个理解：和网络协议的分层结构思想很相似，bossGroup只接受accept事件，然后将连接注册到workergroup上面，它会监听read或者write等事件。如果有这类事件发生就调用handler进行业务处理。就是netty或者说Reactor模型就像这么个流程，没有部门的跨级交流。
+
+     这样分析起来有点像公司的结构：老板负责谈项目，workergroup有点像一个个项目负责人，不同的业务（事件）交由不同的员工（handler）进行具体处理。
+     
+   - 我感觉对一种技术的抽象模型的理解特别重要。
+
+     
+
+ 
 
 - [学习Reactor模式](https://mp.weixin.qq.com/s/vWbbn1qXRFVva8Y9yET18Q)
 
-  - 里面提到了三个角色，其中的acceptor觉得显得比较特殊，因为专门负责处理ACCEPT事件。也就是说所有事件中只有ACCEPT事件比较特殊，需要**专门**的角色进行处理，也就是这里的acceptor。别的事件都交给handler这个角色处理。
+  - 里面提到了三个角色，其中的acceptor觉得显得比较特殊，因为专门负责处理ACCEPT（连接）事件。也就是说所有事件中只有ACCEPT事件比较特殊，需要**专门**的角色进行处理，也就是这里的acceptor。别的事件都交给handler这个角色处理。
 
-  - reactor这个角色就只是一个响应器而已了啦，算是reactor模式的**基本单位**，区分但reactor还是多就是看reactor这个角色的数量。
+  - reactor这个角色就只是一个响应器而已了啦，算是reactor模式的**基本单位**，区分单reactor还是多reactor就是看reactor这个角色的数量。
 
   - Netty采用的应该是多Reactor多线程这种模型，引用里面的话结合图片就很清楚了：:star::star::star:
 

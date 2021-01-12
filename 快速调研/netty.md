@@ -111,7 +111,7 @@
 
   - 里面提到了三个角色，其中的acceptor觉得显得比较特殊，因为专门负责处理ACCEPT（连接）事件。也就是说所有事件中只有ACCEPT事件比较特殊，需要**专门**的角色进行处理，也就是这里的acceptor。别的事件都交给handler这个角色处理。
 
-  - reactor这个角色就只是一个响应器而已了啦，算是reactor模式的**基本单位**，区分单reactor还是多reactor就是看reactor这个角色的数量。
+  - reactor这个角色就只是一个响应器而已了啦，算是reactor模式的**基本单位**，区分单reactor还是多reactor就是看reactor这个角色的数量。而区别单线程还是多线程主要是看handler的个数。
 
   - Netty采用的应该是多Reactor多线程这种模型，引用里面的话结合图片就很清楚了：:star::star::star:
 

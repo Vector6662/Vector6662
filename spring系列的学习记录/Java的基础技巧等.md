@@ -1,5 +1,39 @@
 ### 零碎知识：
 
+
+
+##### [Java 到底是值传递还是引用传递？](https://www.zhihu.com/question/31203609/answer/50992895)
+
+本质上都是值传递，包括引用类型。只不过引用类型传递的是地址。
+
+要想真正修改引用类型，表象上看就得调用方法，而不是赋值。赋值会改变该引用类型变量的值，也即指向的地址空间（heap）。
+
+如经典的例子：
+
+```java
+String str = "123";
+func(str);
+void func(String str){
+    str="987";
+}
+```
+
+用文中的图来理解，调用`func()`时两个`str`（注意这是两个不同的`str`变量哦）值相同，也就是指向了同一段heap。
+
+<img src="https://pic1.zhimg.com/80/d8b82e07ea21375ca6b300f9162aa95f_1440w.jpg?source=1940ef5c" alt="img" style="zoom: 50%;" />
+
+然后执行`str="987"`将会成这样：
+
+<img src="https://pic4.zhimg.com/80/46fa5f10cc135a3ca087dae35a5211bd_1440w.jpg?source=1940ef5c" alt="img" style="zoom:50%;" />
+
+想要真正改变外层`str`变量（全局的`str`），就得而且只能通过**调用方法**来改变，比如`str.replace('1','0');`。
+
+这和c语言的指针是相通的，要改变指针的**指向**的值就得通过`*pt=123;`，其实也可也理解为调用了方法，方法名称为`*`:joy:
+
+
+
+
+
 ##### Java时间格式
 
 [这篇文章](https://www.cnblogs.com/zhengwanmeixiansen/p/7391411.html)
@@ -64,6 +98,15 @@ Arrays.asList(T[] array);
 
 原因还是很显而易见的，子类之所以要继承父类是因为子类要调用父类的一些方法或者属性等，那么这一定就得初始化父类否则调用无从谈起
 
+##### 换行符\n还是\r\n？
+
+这个甚至和操作系统都无关了，变换太大，最直接的方式就是充分利用正则表达式：
+
+```java
+String message="good\n,hello,\r\n";
+message.split("\n|\r\n");//符号 | 便是匹配上一个即可
+```
+
 
 
 ### :exclamation:[泛型](https://segmentfault.com/a/1190000014120746)
@@ -74,7 +117,7 @@ Arrays.asList(T[] array);
 
 2. [**泛型方法**](https://blog.csdn.net/weixin_43819113/article/details/91042598)
 
-   这是主要的难点！
+   这是主要的难点！泛型方法上对泛型的声明让拓宽了思路，我发现方法上的参数申明其实包含两个方面：泛型参数声明和一般参数申明。
 
 > 与类，接口中泛型参数不同的是，方法中的泛型参数**无须显式**传入实际类型参数，如上面程序所示，当程序调用 fromArrayToCollection() 方法时，无须在调用该方法前传入String、Object 等类型，但系统依然可以知道类型参数的数据类型，因为**编译器根据实参推断类型实参的值**，它通常推断出最直接的类型参数。
 
@@ -105,7 +148,7 @@ test(as,ao);
 
    刚开始不是很理解什么叫 ”提供给 javac 编译器使用的“这句话，其实是因为我忽视了**javac**这个词。javac就是用来编译Java源码的，会进行一些语法句法等的解析然后编译成 .class 文件。
 
-   我到现在才发现其实泛型只是一个语法糖而已，因为语法糖只作用在编译时期。在生成`class`文件过后就不会有泛型的信息了，只保留该类型的**类型上限**，一般是`Object`类。
+   我到现在才发现其实泛型只是一个**语法糖**而已，因为语法糖只作用在编译时期。在生成`class`文件过后就不会有泛型的信息了，只保留该类型的**类型上限**，一般是`Object`类。
 
 
 
@@ -418,6 +461,8 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 - > 我们可以通过反射机制编程实现对注解的访问
 
+
+
 #### 反射：
 
 - > 加载完类之后，在堆内存的方法区中就产生了一个**Class类型的对象**（**一个类在内存中只有一个Class对象**），这个对象包含了该类的完整信息
@@ -430,7 +475,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
   1. `Class clazz = Person.class;`：若已知某具体的**类**，通过类的class属性来获得
   2. `Class clazz = person.getClass();`：若已知某个类的**实例**，通过该实例的getClass()方法来获取
-  3. `Class clazz = Class.forName("demo.Student");`：知道该类的**全包名**，而非类的路径。如`Class.forName("com.mysql.cj.jdbc.Driver");`
+  3. `Class clazz = Class.forName("demo.Student");`：前提是知道该类的**全包名**，而非类的路径。如`Class.forName("com.mysql.cj.jdbc.Driver");`
   4. （了解）`Integer.TYPE`：基本**内置**数据类型的封装类有一个TYPE属性
 
 - 这里就可以补充以前学JDBC的时候`Class.forName("com.mysql.cj.jdbc.Driver");`这段代码的作用 了：（[参考](https://blog.csdn.net/m0_45067620/article/details/109169247)）
@@ -548,6 +593,29 @@ list.forEach(i->System.out.println(i));
 
 
 
+关于**回调**：通过上面的例子明白了，其实**回调业务逻辑**在于` action.accept(t);`，这里的逻辑还是比较简单的，仅仅是将数据t传入然后让具体业务进行处理，我把这个过程称为**数据业务逻辑**，这里便会才用到lambda表达式了。
+
+为了清晰理解回调的过程，我分为 回调业务逻辑 和 数据业务逻辑 这两个part，感觉就好理解些了。
+
+在写回调业务逻辑的时候，是不用考虑数据业务逻辑的，毕竟也是面向接口编程。我非常”崇拜“那种有返回值的回调，比如：
+
+```java
+T value=action.callBack(
+    args1,
+    args2,
+    i->{//数据业务逻辑
+        i++;
+        ...;
+        }
+)
+```
+
+value就是返回值，这是不是很妙。
+
+
+
+
+
 参考了[这篇文章](https://www.cnblogs.com/dgwblog/p/11739500.html)，这篇文章爱了爱了​ :heart:
 
 #### 函数引用和lambda表达式
@@ -597,39 +665,62 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
         });
 ```
 
+#### 重点阅读文章：[Lambda表达式](https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535/gilh34#ELAV7)
+
+这篇文章收获巨大，关键还是思维的转变，也就是Java的面向对象的思维需要转变，编程函数式编程的思维。这样的话这个知识点就比较好理解了。
+
+这篇文章有一句话挺关键：
+
+> 不要关注当前lambda将会如何被调用，出现在代码的哪一块，而是关注如何编写lambda，要实现什么样的逻辑。
+
+这篇文章同时也回答了**为什么传递给匿名内部类的参数必须声明为final？**。我特地复习了一下C语言的内存结构，联系了起来，我发现其实关键字`new`得到的对象其实是放在**堆**中的，相当于C语言`malloc()`得到的。于是除非显式释放掉这段空间或者整个程序结束，而不会像栈中的方法一样，调用完毕后就自行释放。于是在方法作用域内的变量传递给内部类是不合法的，因为该变量一定会在方法调用完毕后释放。
+
 
 
 
 
 ---
 
-### 类加载器
+### 类加载器，双亲委派模型
 
-这篇文章写得太全面了，我简直跪了：[好怕怕的类加载器 - 请叫我程序猿大人的文章](https://zhuanlan.zhihu.com/p/54693308)
+##### 参考文章一：[好怕怕的类加载器](https://zhuanlan.zhihu.com/p/54693308)
 
-> 面试官插嘴：ExtClassLoader为什么没有设置parent？
->
-> **因为BootstrapClassLoader是由c++实现的，所以并不存在一个Java的类，因此会打印出null，所以在ClassLoader中，null就代表了BootstrapClassLoader（有些片面）。**
+- 这篇文章写得太全面了，我简直跪了：
 
-回答得过于精辟！！！
+  > **面试官插嘴：ExtClassLoader为什么没有设置parent？**
+  >
+  > 因为BootstrapClassLoader是由c++实现的，所以并不存在一个Java的类，因此会打印出null，所以在ClassLoader中，null就代表了BootstrapClassLoader（有些片面）。
 
-文章中有提到如何实现一个`ClassLoader`，惊喜的是提到了**模板方法**模式！原来实现一个`ClassLoader`用到了该模式：只需要重写`findClass()`方法即可，看完`ClassLoader#loadClass()`源码其实就能明白原因。
+  文章中有提到如何实现一个`ClassLoader`，惊喜的是使用到了**模板方法**模式！原来实现一个`ClassLoader`用到了该模式：只需要重写`findClass()`方法即可，看完`ClassLoader#loadClass()`源码其实就能明白原因。
 
-越看到后面越看不懂。。。歇歇再看。。。
+  （越看到后面越看不懂。。。歇歇再看。。。:joy:）
 
-但是目前看到的地方得注意一下，有一点讲的非常好：
+- 但是目前看到的地方得注意一下，有一点讲的非常关键:star::star::star:
 
-> 会抛出ClassCastException，因为一个类，就算包路径完全一致，**但是加载他们的ClassLoader不一样**，那么这两个类也会被认为是两个不同的类。
+  > 会抛出ClassCastException，因为一个类，就算包路径完全一致，**但是加载他们的ClassLoader不一样**，那么这两个类也会被认为是两个不同的类。
 
-这一点是新的知识，很厉害！
+  这一点是新的知识，很厉害！
+
+- > Returns the class with the given binary name if this loader has been recorded by the Java virtual machine as an initiating loader of a class with that binary name. Otherwise null is returned.
+  >
+  > 将输入的binary name（即Java类的全名）对应的类返回，前提是***当前* 加载器**已经被JVM记录为具有这个binary name的类的启动类，反之返回`null`。（前提是...后面的话很重要）
+
+  注意上面加粗，只有被**当前**类加载器加载的才会返回哦，其他类加载器加载的是不会返回的。
+
+##### 参考文章二：[Java 类加载器（ClassLoader）的实际使用场景有哪些？](https://www.zhihu.com/question/46719811/answer/1739289578)
+
+- > 因为一个类的**全限定名**以及**加载该类的加载器**两者共同形成了这个类在JVM中的惟一标识，这也是阿里pandora实现依赖隔离的基础。
+
+  与上面参考文章的第三点表达的是同一个意思。这里有空的时候可以调研一下潘多拉。
+
+- 总结一下双亲委派模型下各个加载器所加载的类：
+
+  - `Bootstrap ClassLoader`：<JAVA_HOME>/lib 下，即以`java`开头的**基础**类，如`java.io.* `；
+  - `Extention Classloader`：<JAVA_HOME>/lib/ext下，即以`javax`开头的JVM**扩展**类；
+  - `Application Classloader`：自己编写的代码和第三方jar包，写pom文件下的依赖涉及的类都得是这个加载器加载；
+  - `Custom Classloader`：自定义。
 
 
-
-> Returns the class with the given binary name if this loader has been recorded by the Java virtual machine as an initiating loader of a class with that binary name. Otherwise null is returned.
-
-翻译：将输入的binary name（即Java类的全名）对应的类返回，前提是**当前加载器**已经被JVM记录为具有这个binary name的类的启动类，反之返回`null`。（前提是...后面的话很重要）
-
-注意上面加粗，只有被**当前**类加载器加载的才会返回哦，其他类加载器加载的是不会返回的。
 
 
 

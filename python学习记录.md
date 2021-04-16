@@ -1,18 +1,3 @@
-7. [怎样理解阻塞非阻塞与同步异步的区别？ - 萧萧的回答 - 知乎](https://www.zhihu.com/question/19732473/answer/241673170)
-
-   <img src="C:\Users\82526\AppData\Roaming\Typora\typora-user-images\image-20200707133820632.png" alt="image-20200707133820632" style="zoom:80%;" />
-
-8. 由rabbitmq引入的阻塞式和非阻塞式的通信方式思考
-
-   [参考](http://rabbitmq.mr-ping.com/AMQP/AMQP_0-9-1_Model_Explained.html)
-
-   > AMQP代理在什么时候删除消息才是正确的？AMQP 0-9-1 规范给我们两种建议：
-   >
-   > - 当消息代理（broker）将消息发送给应用后立即删除。（使用AMQP方法：basic.deliver或basic.get-ok）
-   > - 待应用（application）发送一个确认回执（acknowledgement）后再删除消息。（使用AMQP方法：basic.ack）
-
-   
-
 #### [pip国内源](https://blog.csdn.net/qq_30754565/article/details/82777253)
 
 ​		阿里云 http://mirrors.aliyun.com/pypi/simple/ 
@@ -25,11 +10,9 @@
 可以在使用pip的时候在后面加上-i参数，指定pip源 
 eg: pip install scrapy -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-
-
 #### conda和pip
 
-<img src="https://upload-images.jianshu.io/upload_images/12713060-25623c3d88871cdf.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp" alt="img" style="zoom: 50%;" />
+<img src="https://upload-images.jianshu.io/upload_images/12713060-25623c3d88871cdf.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp" alt="img" style="zoom: 33%;" />
 
 [conda中重要的三个概念：环境、通道和包](https://www.cnblogs.com/dadream/p/10820379.html)
 
@@ -45,31 +28,13 @@ eg: pip install scrapy -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 `conda env list` 查看conda环境(*Environments*)列表
 
-清华源好像不咋滴:laughing:
-
-#### [使用python中的pymysql模块](https://blog.csdn.net/kelanj/article/details/82792254)
-
-```sql
-sql = 'insert into interest_pic_tag(interest_tag,pic_tag) values ("%s","%s")'%(interest_tag, pic_tag)
-```
-
-这里的`("%s","%s")`原来还要双引号，但是目前不知道为啥，:warning:需要过后查一下
+（清华源好像不咋滴:laughing:）
 
 
 
-#### python多线程
+#### python学习的一些踩坑记录：
 
-<img src="C:\Users\82526\AppData\Roaming\Typora\typora-user-images\image-20200709162444764.png" alt="image-20200709162444764" style="zoom:80%;" />
-
-#### [RabbitMQ获取消息的两种方式](https://blog.csdn.net/joeyon1985/article/details/43406609?utm_source=blogxgwz4)
-
-其中的Poll方式应该是最常用的，注意这种方式得`GetResponse response = channel.basicGet(QUEUE_NAME,autoAck=false);`即最好自动回复确认，否则消息会进入unacked中。
-
-我觉得应该得研究一下当`autoAck=false`的时候该如何处理？basicAck()`函数的第一个参数应该传什么值呢？
-
-
-
-#### python学习的一些知识细节：
+每过一段可能会删除一些，因为很有可能那个时候觉得这个点很简单了。
 
 1. 在Python中，
 
@@ -86,14 +51,6 @@ sql = 'insert into interest_pic_tag(interest_tag,pic_tag) values ("%s","%s")'%(i
    4 else:
    5     # list_temp是空的
    ```
-
-2. [各种下划线](https://blog.csdn.net/tcx1992/article/details/80105645)
-
-   > 单个下划线是一个Python命名约定，表示这个名称是供内部使用的。 它通常不由Python解释器强制执行，仅仅作为一种对程序员的提示。
-
-   > \_\_init\_\_()方法又被称为构造器（constructor）
-
-3. str.format()方法这是个基础方法
 
 4. python数据类型转换，感觉比Java中的直观得多：
 
@@ -117,93 +74,65 @@ String->int		Integer.ParseInt(str)
    words[3:6] ->deh
    ```
    
-   words[m:n]**切片范围为[m,n)**
+   words[m:n]**切片范围为[m,n)**，左闭右开。
    
-6. 一些基础的语法事例，直接快速学习
+4. [使用python中的pymysql模块](https://blog.csdn.net/kelanj/article/details/82792254)踩的坑
+
+   ```sql
+   sql = 'insert into interest_pic_tag(interest_tag,pic_tag) values ("%s","%s")'%(interest_tag, pic_tag)
+   ```
+
+   这里的`("%s","%s")`原来还要双引号，但是目前不知道为啥，:warning:需要过后查一下。
+
+5. python无法导入自己的模块的解决办法
+
+   参考文章：https://www.cnblogs.com/yibeimingyue/p/11367614.html，这个和Java很相似，需要标记**source目录**
+
+
+
+#### `self`如何理解？
 
 ```python
-def filter(l):	# def表示定义函数
-    x=[]
-    for i in range(0,len(l)):	# len()表示获取数组长度
-        if l[i]%2!=0:
-            x.append(l[i])	# 追加
-    return x
+class Test():
+    def prt(self,args):
+        print(args)
+test = Test()  # 创建对象，相当于Java中的new Test();
+# 以下两种方式等价
+test.prt("hello")  #这种方式隐式传递test对象
+Test.prt(test,'helloooo')  #这种方式更加接近本质，显示传递对象
 ```
 
-7. ## [一文详解python的类方法，普通方法和静态方法](https://www.cnblogs.com/jayliu/p/9030725.html)
+- [self可以不写吗？](https://www.zhihu.com/question/39264541/answer/685673258)
 
-#### :star:python上的正则化要学习
+  > 在python解释器内部，**当我们调用`t.prt()`时，实际上Python解释成`Test.prt(t)`**，也就是说把self替换成类的实例
+
+- [对象与this](https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535/st08ml)
+
+  这篇文章我觉得甚至有哲学深度！！！多看几遍！！！简单来说`self`在python中其实是显示传递的对象参数，而这个对象其实和java的对象一样，在**堆**中。
 
 
 
-#### 对`self`的理解
 
-```py
-class Test:
-	def prt(self):
-		printf(self)
 
-t=Test()
-t.prt()   -> Test.prt(t) 这种方式更接近本质
-```
 
-- self可以不写吗？
 
-> 在python解释器内部，**当我们调用`t.prt()`时，实际上Python解释成`Test.prt(t)`**，也就是说把self替换成类的实例
->
-> https://www.zhihu.com/question/39264541/answer/685673258
-
-- 个人理解
-
-1. <u>python将类的实例以类中**参数**(self)的形式独立出来</u>，如上面的`Test.prt(t)`，最终始终调用的是Test类而非其实例t。 若实例的方法不传self，则会自行调用传self，这算是python的一个语法糖了。
-2. 在类中方法的参数中加上self，表明这是一个**实例方法**，而非类方法。这是一个简单实用的理解方法:joy:
-
-#### [python无法导入自己的模块的解决办法](https://www.cnblogs.com/yibeimingyue/p/11367614.html)
-
-#### python3新增数据结构：set()集合
+#### set()集合:python3新增数据结构
 
 - https://www.runoob.com/python3/python3-set.html
 
   > 可以使用大括号 **{ }** 或者 **set()** 函数创建集合，注意：创建一个空集合必须用 **set()** 而不是 **{ }**，因为 **{ }** 是用来创建一个空字典。
 
-可以这么理解，{}符号是被集合和字典公用的符号，具体是什么得看里边的内容，如果是元素则为集合，若为键值对则为字典。所以声明空集合的时候不能用{}，因为编辑器不知道你到底想申明的是集合还是字典，所以{}就用作字空典的申明了，而set()用作空集合的申明。
+可以这么理解，`{}`符号是被集合和字典公用的符号，具体是什么得看里边的内容，如果是元素则为集合，若为键值对则为字典。所以声明空集合的时候不能用`{}`，因为编辑器不知道你到底想申明的是集合还是字典，所以`{}`就用作字空典的申明了，而set()用作空集合的申明。
 
 
 
+#### `with`如何理解？
 
-
-#### [python中**with**理解](https://www.cnblogs.com/pythonbao/p/11211347.html)
+参考：https://www.cnblogs.com/pythonbao/p/11211347.html
 
 其实它的核心就是简化try, except, finally，将它的功能**封装**了一下，这算是一种模块化的思想。比如打开文件的操作`open('1.txt','r)`，是会有异常抛出的，而with...as这种方式将try，catch语句封装到了open语句之中。
 
 具体的做法见链接，简单来说有两个方法，`__enter__()`和`__exit__()`，前一个相当于`try`，后一个如果有异常抛出相当于`except`。
-
-
-
-#### 注释：'''或"""
-
-两者是等价的，区别于#，”“”或'''表示的是**多行**注释（ # 只能注释单行），感觉相当于Java的
-
-```java
-/**
- * @Description:测试controller
- * @Author: dong
- * @Date: 2020/10/27 18:41
- */
-```
-
-更相当于HTML中的
-
-```html
-<!--
-	这是
-	一个
-	测试
-	注解
--->
-```
-
-
 
 #### 字符串前：r , u , b , f
 
@@ -237,4 +166,16 @@ t.prt()   -> Test.prt(t) 这种方式更接近本质
   "hello {} is smart".format("dong")
   ```
 
+
+#### type hints
+
+
+
+
+
+### todo list:
+
+- **python上的正则化要学习，先调研	2021/4/16**
+
   
+

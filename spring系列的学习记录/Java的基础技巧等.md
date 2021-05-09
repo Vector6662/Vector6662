@@ -1,6 +1,4 @@
-### 零碎知识：
-
-
+## 零碎知识：
 
 ##### [Java 到底是值传递还是引用传递？](https://www.zhihu.com/question/31203609/answer/50992895)
 
@@ -109,19 +107,19 @@ message.split("\n|\r\n");//符号 | 便是匹配上一个即可
 
 
 
-### :exclamation:[泛型](https://segmentfault.com/a/1190000014120746)
+## [泛型](https://segmentfault.com/a/1190000014120746)------Generics🎈
 
-1. [泛型类](https://www.cnblogs.com/coprince/p/8603492.html)
+#### [泛型类](https://www.cnblogs.com/coprince/p/8603492.html)
 
-> 定义的泛型类，就一定要传入泛型类型实参么？在使用泛型的时候如果传入泛型实参，**则会根据传入的泛型实参做相应的限制**，*此时泛型才会起到本应起到的限制作用*。如果不传入泛型类型实参的话，在泛型类中使用泛型的方法或成员变量定义的类型可以为**任何的类型**。
+> 定义的泛型类，就一定要传入泛型类型实参么？在使用泛型的时候如果传入泛型实参，**则会根据传入的泛型实参做相应的限制**，*此时泛型才会起到本应起到的限制作用*。如果不传入泛型类型实参的-话，在泛型类中使用泛型的方法或成员变量定义的类型可以为**任何的类型**。
 
-2. [**泛型方法**](https://blog.csdn.net/weixin_43819113/article/details/91042598)
+#### [泛型方法](https://blog.csdn.net/weixin_43819113/article/details/91042598)
 
-   这是主要的难点！泛型方法上对泛型的声明让拓宽了思路，我发现方法上的参数申明其实包含两个方面：泛型参数声明和一般参数申明。
+这是主要的难点！泛型方法上对泛型的声明让拓宽了思路，我发现方法上的参数申明其实包含两个方面：泛型参数声明和一般参数申明。
 
-> 与类，接口中泛型参数不同的是，方法中的泛型参数**无须显式**传入实际类型参数，如上面程序所示，当程序调用 fromArrayToCollection() 方法时，无须在调用该方法前传入String、Object 等类型，但系统依然可以知道类型参数的数据类型，因为**编译器根据实参推断类型实参的值**，它通常推断出最直接的类型参数。
+> 与类，接口中泛型参数不同的是，方法中的泛型参数**无须显式**传入实际类型参数。如上面程序所示，当程序调用 fromArrayToCollection() 方法时，无须在调用该方法前传入String、Object 等类型，但系统依然可以知道类型参数的数据类型，因为**编译器根据实参推断类型实参的值**，它通常推断出最直接的类型参数。
 
-这应该指的是**类型推导**:stars:
+:stars:上面引用加粗部分应该指的是**类型推导**
 
 ```java
 //这是一个泛型方法，<T>就是声明一个方法持有一个类型T   这句话非常重要！！！
@@ -138,17 +136,35 @@ List<object> ao=new ArrayList<>();
 test(as,ao);
 ```
 
-**2020/11/2**：“类型推导”这个词反而不利于理解，应该说**String类型被作为参数，和变量as和ao一起被赋值**了，这个String类型的参数对应的形参就是**T**！（同时as和ao对应的形参是from和to）
+**2020/11/2思考**：“类型推导”这个词反而不利于理解，应该说**String类型被作为参数（类型参数化），和实参as和ao一起被赋值**了，这个String类型的参数对应的形参就是**T**！（同时as和ao对应的形参是from和to）
 
 真的不是啥很难很神奇的点，不就是类型参数化了吗，很难吗？？？一点也不难好吧！
 
-3. [泛型擦除](https://segmentfault.com/a/1190000014120746)，整点底层的知识
+#### [泛型擦除](https://segmentfault.com/a/1190000014120746)---整点底层的知识
 
-   > 泛型是**提供给javac编译器使用的**，它用于限定集合的输入类型，让编译器在源代码级别上，即挡住向集合中插入非法数据。但编译器编译完带有泛形的java程序后，**生成的class文件中将不再带有泛形信息**，以此使程序运行效率不受到影响，这个过程称之为“擦除”。
+![image-20210507105850041](Java的基础技巧等.assets/image-20210507105850041.png)
 
-   刚开始不是很理解什么叫 ”提供给 javac 编译器使用的“这句话，其实是因为我忽视了**javac**这个词。javac就是用来编译Java源码的，会进行一些语法句法等的解析然后编译成 .class 文件。
+> 泛型是提供给**javac编译器**使用的，它用于限定集合的输入类型，让编译器在源代码级别上，即挡住向集合中插入非法数据。但编译器编译完带有泛形的java程序后，**生成的class文件中将不再带有泛形信息**（这句话最重要），以此使程序运行效率不受到影响，这个过程称之为“擦除”。
 
-   我到现在才发现其实泛型只是一个**语法糖**而已，因为语法糖只作用在编译时期。在生成`class`文件过后就不会有泛型的信息了，只保留该类型的**类型上限**，一般是`Object`类。
+刚开始不是很理解什么叫 ”提供给 javac 编译器使用的“这句话，其实是因为我忽视了**javac**这个词。javac就是用来编译Java源码的，也就是刚开始学Java时遇见的`javac test.java`这个命令，会进行一些语法句法等的解析然后编译成 .class 文件。
+
+我到现在才发现泛型更像一个**语法糖**，也可以比喻成一个拦截器，因为语法糖只作用在编译时期。在生成`class`文件过后就不会有泛型的信息了，只保留该类型的**类型上限**，一般是`Object`类。
+
+#### **为什么泛型不支持基本数据类型？**
+
+看了一篇文章说得比较清楚了，归根结底是因为没有这样的语法：
+
+```java
+Object obj = 333;
+```
+
+这种语法连编译都不肯通过，因为333并不是引用类型，而很明显Object对象只可能接受引用类型。同时由于泛型擦除的存在，将源码编译成字节码文件(.class)后泛型的类型都会变成Object类型，Object类型的变量不可能接受基本类型。但是改成下面这样是没问题的：
+
+```java
+Object obj = Integer.valueOf(333);
+```
+
+
 
 
 
@@ -207,7 +223,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 
 
-### 设计模式
+## 设计模式🎈
 
 我认为设计模式的三大类型还是需要搞清楚分类依据的。我大概思考了一下，感觉很有意思：
 
@@ -217,7 +233,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 箭头后面是我自己的话提炼了一下。发现没有，其实这三大类是一个递进关系：首先要创建对象，如何创建？于是有了创建型设计模式；然后创建好了的对象之间的关系，如何组合更优？于是有了结构型；最后将这些对象如何更好地融入业务逻辑中，于是有了行为型。
 
-#### 工厂方法或者抽象工厂
+### 工厂方法或者抽象工厂
 
 我甚至懒得区分二者之间的差别了，感觉都差不多，区别都不是本质。
 
@@ -229,7 +245,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 
 
-#### 动态代理
+### 动态代理
 
 ##### 实现方式一：JDK的Proxy类
 
@@ -245,15 +261,15 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 3. ```java
    Method method = new ...;
-   method.invoke(Object obj, Object... args);
+   method.invoke(Object target, Object... args);
    /**
        Params:
-       obj – the object the underlying method is invoked from(用我自己的话说：哪个实例要调用该方法？这里就填写这个示例)
-       args – the arguments used for the method call
+       target – the object the underlying method is invoked from(用我自己的话说：哪个实例要调用该方法？这里就填写这个示例)
+       args – the arguments(实参) used for the method call
    */
    ```
 
-4. 对`InvocationHandler`的
+4. 对`InvocationHandler`的理解
 
    > 实现接口是一个类认干爹的过程。**接口无法创建对象，但实现该接口的类可以**。
 
@@ -282,7 +298,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 8. 动态代理的作用是什么？
 
-   > 1. Proxy类的**代码量被固定下来**，不会因为业务的逐渐庞大而庞大；（个人感觉这才是最关键的因素，静态代理代码量实在太多。动态代理）
+   > 1. 相较于静态代理，动态代理的代理类的**代码量被固定下来**，不会因为业务的逐渐庞大而庞大；（个人感觉这才是最关键的因素，静态代理代码量实在太多）
    > 2. 可以实现AOP编程，实际上静态代理也可以实现，总的来说，AOP可以算作是代理模式的一个典型应用；
    > 3. 解耦，通过参数就可以判断真实类，不需要事先实例化，更加灵活多变。
 
@@ -298,7 +314,24 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 ##### 实现方式二：cglib代理
 
-**基于子类代理**。这种方式相较于第一种实现方式，变得更加”智能“，不要求target（被代理类）要实现接口。因为这种方式引入了`Enhancer`类，**将target类作为其父类**。
+**基于子类代理**。这种方式相较于第一种实现方式，变得更加”智能“，不要求target（被代理类）要实现接口。因为这种方式引入了`Enhancer`类，将target类作为其**父类**。
+
+这里有两种方式来调用目标方法（invoke）的方式，因为很容易弄混，所以我在这里强调一下：
+
+```java
+...(省略);
+enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
+            System.out.println("before invoke");
+    		//方式一，在cglib下推荐使用
+            Object obj = methodProxy.invokeSuper(o,args);
+    		//方式二，这种方式在cglib下稍微麻烦些，需要手动将target，也就是被代理对象！作为参数传入，供invoke()方法使用
+    		Object obj = method.invoke(target,args);
+            System.out.println("after invoke");
+            return obj;
+        });
+```
+
+
 
 参考了好几篇文章，也在我的GitHub上有实现。
 
@@ -308,7 +341,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 
 
-#### 原型模式
+### 原型模式
 
 `Cloneable`接口中有这么一段：
 
@@ -332,7 +365,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 
 
-### 2020/11/7，一个猜测：（待解决）
+## ❓一个猜测：（待解决）
 
 学习了一下反射机制，里面提及了`ClassLoader`，目前的看法是应该很多的class文件加载到内存都会共用一个`ClassLoader`，到底用哪个`ClassLoader`是由JVM决定的，但是注意，别用`Object.getClassLoader()`，
 
@@ -425,15 +458,9 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 
 
+## 注解：
 
-
-
-
-### 快速调研
-
-> spring、mybaties等框架的底层都是基于注解和反射
-
-#### 注解：
+### 快速调研：
 
 - @SupressWarnings("all") 算是一个黑科技，可以把一个类乃至一个变量的黄色警告等给镇压了，但是并不建议这么做，除非自太多 自己看着烦了:joy:
 
@@ -463,104 +490,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 
 
-#### 反射：
-
-- > 加载完类之后，在堆内存的方法区中就产生了一个**Class类型的对象**（**一个类在内存中只有一个Class对象**），这个对象包含了该类的完整信息
-  >
-  > 这个对象就像一面镜子，透过这个镜子看到了类的结构
-  >
-  > 一个类被加载后，类的整个结构都会被封装在class对象中
-
-- 获取Class类的实例的四种方法：
-
-  1. `Class clazz = Person.class;`：若已知某具体的**类**，通过类的class属性来获得
-  2. `Class clazz = person.getClass();`：若已知某个类的**实例**，通过该实例的getClass()方法来获取
-  3. `Class clazz = Class.forName("demo.Student");`：前提是知道该类的**全包名**，而非类的路径。如`Class.forName("com.mysql.cj.jdbc.Driver");`
-  4. （了解）`Integer.TYPE`：基本**内置**数据类型的封装类有一个TYPE属性
-
-- 这里就可以补充以前学JDBC的时候`Class.forName("com.mysql.cj.jdbc.Driver");`这段代码的作用 了：（[参考](https://blog.csdn.net/m0_45067620/article/details/109169247)）
-
-  >我都知道 `Class.forName()`是要加载一个类，不知道大家还记得不记得**类被加载时**是会执行**静态代码块**的，好像执行之一次
-  >所以A和B看似没关系，其实它们俩有“不可告人的秘密”，我敢打保证`com.mysql.cj.jdbc.Driver`这个类绝对有个**static代码块**，其中肯定有与B相关的代码结构：
-
-  <img src="https://img-blog.csdnimg.cn/20201019211839536.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ1MDY3NjIw,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述" style="zoom:70%;" />
-
-- [学习java应该如何理解反射？](https://www.zhihu.com/question/24304289/answer/694344906)这个回答信息量很大！
-
-  - 先说说对`ClassLoader`的理解：将*.class字节码文件**load**到内存中，并且返回Class对象。该类主要就做这一项工作。
-  
-  - Class类的理解：
-  
-    - <img src="https://pic1.zhimg.com/80/v2-d4cb040cceebe0dab651c95a0c22c7f0_1440w.jpg?source=1940ef5c" alt="img" style="zoom:50%;" />
-  
-      >可以发现，Class类的构造器是私有的,我们无法手动new一个Class对象,**只能由JVM创建**。JVM在构造Class对象时，需要传入一个类载器，然后才有我们上面分析的一连串加载、创建过程。
-  
-      ```java
-       /*
-           * Private constructor. Only the Java Virtual Machine creates Class objects.
-           * This constructor is not used and prevents the default constructor being
-           * generated.
-           */
-          private Class(ClassLoader loader) {
-              // Initialize final field for classLoader.  The initialization value of non-null
-              // prevents future JIT optimizations from assuming this final field is null.
-              classLoader = loader;
-          }
-      ```
-  
-      翻译：私有构造器，**只有JVM能够创建Class类的对象**。这个构造器是不被使用的，它存在的目的只是为了**避免**默认的构造器（`public Class(...)`）被调用
-  
-      ```java
-      以下是对Class类的表述：
-      /*
-      *Class has no public constructor. Instead Class objects are constructed automatically by the Java *Virtual Machine as classes are loaded and by calls to the defineClass method in the class loader.
-      */
-      Class对象没有public修饰的构造器。相反，Class类的对象是由JVM在类们被装载入内存后自动构造的，并由ClassLoader的`defineClass`方法调用来构造的。
-      ```
-  
-      
-  
-  - 一个比较细节的点：`Constructor`和`Class`类都有`newInstance()`方法，但是`Class`对象的`newInstance()`：
-  
-    > 底层就是调用**无参**构造（Constructor）对象的`newInstance()`。
-  
-    >所以，本质上Class对象要想创建实例，其实都是通过**构造器对象**。<u>如果没有空参构造对象,就无法使用</u>`clazz.newInstance()`，必须要获取其他有参的构造对象然后调用构造对象的`newInstance()`。
-  
-    > 所以，要想调用`clazz.newInstance()`，必须保证编写类的时候有个**无参构造**。
-  
-- 学到这里，我倒是渐渐能够理解`Class`对象的一种经典定义了：包含一个类（准确的说是A.class文件）的所有信息的对象，且**一个类在内存中有且只有一个`Class`对象**。
-
-- 一个无意中捕获的线索：（[来源](https://www.zhihu.com/question/29996850/answer/47429324)）
-
-  > 另一个是由于使用反射或动态语言而导致不断有新类加载，但之前被加载的类没有被卸载导致类元数据所使用的内存空间越来越多。
-
-  我的理解是，Java如果没有引入反射，就是静态语言，在程序编译过后产生的.class字节码文件会被加载到内存生成class对象，**并且在RUNTIME阶段 这些class对象就会一直在内存中，不会有任何改变或新增class对象，只能读取用来生成相应的对象**，这也是静态的原因。根据此思考，反射带来的动态应该就是能够修改这些class对象（只是猜测，很有可能不可以，看了 `Class` 源码基本都只有get方法，没有set或add），或者**创建新的class对象**，比如动态代理。
-
-
-
-
-
-
-
-
-
-### Spring AOP
-
-- [Spring AOP的实现原理 ?](https://www.zhihu.com/question/23641679/answer/704897152) 
-
-  其中一个例子很恰当：
-
-  >目标方法的return是整个递归责任链的精华所在，就像一个弹簧,被压到最大限度,开始return了。所以，原路返回，执行每个拦截器`invoke()`方法中两个语句的下一句。
-
-  弹簧很形象，开始压弹簧的时候是在执行before链，压到最低点之后便执行目标方法（文中的`target.add()`），最后释放弹簧执行after链。
-
-
-
-
-
----
-
-### 函数式接口：Java 8的新特性
+## FunctionalInterface：Java8的新特性
 
 > 写在前面：本质是**回调机制**，而且一个很有意思但我过了很久才发现的点是，那些能够采用lambda表达式，更本质说是实现回调的参数，无一列外都是`Interface`，这其实是显而易见的，但是很少有总结这个现象。
 
@@ -611,8 +541,6 @@ T value=action.callBack(
 ```
 
 value就是返回值，这是不是很妙。
-
-
 
 
 
@@ -679,7 +607,86 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 
 
----
+
+
+## 反射🎈
+
+这是一个大体系
+
+### 快速调研
+
+- > 加载完类之后，在堆内存的**方法区**中就产生了一个**Class类型的对象**（**一个类在内存中只有一个Class对象**），这个对象包含了该类的完整信息。
+  >
+  > 这个对象（Class类型）就像一面镜子，透过这个镜子看到了类的一切结构。
+  >
+  > 一个类被加载（通过ClassLoader）后，类的整个结构都会被封装在class对象中。
+
+  <img src="Java的基础技巧等.assets/7baac7778c6a41aa89b237bbec057ce6~tplv-k3u1fbpfcp-watermark.image" alt="图片.png" style="zoom:50%;" />
+  
+- 获取Class类的实例的四种方法：
+
+  1. `Class clazz = Person.class;`：若已知某具体的**类**，通过类的class属性来获得
+  2. `Class clazz = person.getClass();`：若已知某个类的**实例**，通过该实例的`getClass()`方法来获取
+  3. `Class clazz = Class.forName("demo.Student");`：前提是知道该类的**全包名**，而非类的路径。如`Class.forName("com.mysql.cj.jdbc.Driver");`
+  4. （了解）`Integer.TYPE`：基本**内置**数据类型的封装类有一个TYPE属性
+
+- 这里就可以补充以前学JDBC的时候`Class.forName("com.mysql.cj.jdbc.Driver");`这段代码的作用 了：[^1]
+
+  >我都知道 `Class.forName()`是要加载一个类，不知道大家还记得不记得**类被加载时**是会执行**静态代码块**的，好像执行之一次
+  >所以A和B看似没关系，其实它们俩有“不可告人的秘密”，我敢打保证`com.mysql.cj.jdbc.Driver`这个类绝对有个**static代码块**，其中肯定有与B相关的代码结构：
+
+  <img src="https://img-blog.csdnimg.cn/20201019211839536.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ1MDY3NjIw,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述" style="zoom:70%;" />
+
+- [学习java应该如何理解反射？](https://www.zhihu.com/question/24304289/answer/694344906)这个回答信息量很大！
+
+  - 先说说对`ClassLoader`的理解：将*.class字节码文件**load**到内存中，并且返回Class对象。该类主要就做这一项工作。
+
+  - Class类的理解：
+
+    - <img src="https://pic1.zhimg.com/80/v2-d4cb040cceebe0dab651c95a0c22c7f0_1440w.jpg?source=1940ef5c" alt="img" style="zoom:50%;" />
+
+      >可以发现，Class类的构造器是私有的,我们无法手动new一个Class对象,**只能由JVM创建**。JVM在构造Class对象时，需要传入一个类载器，然后才有我们上面分析的一连串加载、创建过程。
+
+      ```java
+       /*
+           * Private constructor. Only the Java Virtual Machine creates Class objects.
+           * This constructor is not used and prevents the default constructor being
+           * generated.
+           */
+          private Class(ClassLoader loader) {
+              // Initialize final field for classLoader.  The initialization value of non-null
+              // prevents future JIT optimizations from assuming this final field is null.
+              classLoader = loader;
+          }
+      ```
+
+      翻译：私有构造器，**只有JVM能够创建Class类的对象**。这个构造器是不被使用的，它存在的目的只是为了**避免**默认的构造器（`public Class(...)`）被调用
+
+      ```java
+      以下是对Class类的表述：
+      /*
+      *Class has no public constructor. Instead Class objects are constructed automatically by the Java *Virtual Machine as classes are loaded and by calls to the defineClass method in the class loader.
+      */
+      Class对象没有public修饰的构造器。相反，Class类的对象是由JVM在类们被装载入内存后自动构造的，并由ClassLoader的`defineClass`方法调用来构造的。
+      ```
+
+      
+
+  - 一个比较细节的点：`Constructor`和`Class`类都有`newInstance()`方法，但是`Class`对象的`newInstance()`：
+
+    > 底层就是调用**无参**构造（Constructor）对象的`newInstance()`。
+
+    >所以，本质上Class对象要想创建实例，其实都是通过**构造器对象**。<u>如果没有空参构造对象,就无法使用</u>`clazz.newInstance()`，必须要获取其他有参的构造对象然后调用构造对象的`newInstance()`。
+
+    > 所以，要想调用`clazz.newInstance()`，必须保证编写类的时候有个**无参构造**。
+
+- 学到这里，我倒是渐渐能够理解`Class`对象的一种经典定义了：包含一个类（准确的说是A.class文件）的所有信息的对象，且**一个类在内存中有且只有一个`Class`对象**。
+
+- 一个无意中捕获的线索：（[来源](https://www.zhihu.com/question/29996850/answer/47429324)）
+
+  > 另一个是由于使用反射或动态语言而导致不断有新类加载，但之前被加载的类没有被卸载导致类元数据所使用的内存空间越来越多。
+
+  我的理解是，Java如果没有引入反射，就是静态语言，在程序编译过后产生的.class字节码文件会被加载到内存生成class对象，**并且在RUNTIME阶段 这些class对象就会一直在内存中，不会有任何改变或新增class对象，只能读取用来生成相应的对象**，这也是静态的原因。根据此思考，反射带来的动态应该就是能够修改这些class对象（只是猜测，很有可能不可以，看了 `Class` 源码基本都只有get方法，没有set或add），或者**创建新的class对象**，比如动态代理。
 
 ### 类加载器，双亲委派模型
 
@@ -734,7 +741,18 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 参考：[Java中的spi机制](https://blog.csdn.net/sigangjun/article/details/79071850)、[Java SPI思想梳理](https://zhuanlan.zhihu.com/p/28909673)
 
-<img src="https://pic3.zhimg.com/80/v2-9db1c292ae743dad89615c2a41d967b6_1440w.png" alt="img" style="zoom:67%;" />
+<img src="https://pic3.zhimg.com/80/v2-9db1c292ae743dad89615c2a41d967b6_1440w.png" alt="img" style="zoom: 50%;" />
 
 
 
+
+
+
+
+
+
+
+
+---
+
+[^1]:[老铁们想知道 Class.forName(“com.mysql.cj.jdbc.Driver“) 这个加载类是干啥用的吗](https://blog.csdn.net/m0_45067620/article/details/109169247)

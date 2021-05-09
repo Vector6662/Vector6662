@@ -347,9 +347,3 @@ public UsernamePasswordAuthenticationFilter() {
    上面源码中的against应该翻译为“针对”好些，即*一种针对线程存储安全上下文信息的策略*。
 
    接下来的preferred应该译为“首选的”
-
----
-
-### EMOJI CHEAT SHEET
-
-<img src="https://img-blog.csdn.net/20181007202942931?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzMzOTgyMjMy/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img" style="zoom: 150%;" />

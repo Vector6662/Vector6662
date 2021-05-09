@@ -680,17 +680,17 @@ Do not go gentle into that good night
 
 居然发现已经有三个月没更新了，不过没关系，今天是来更新我接下来的规划。我感觉自己大致想明白了接下来的技术路线，以机器学习的数据挖掘为主要方向，目前感觉我挺感兴趣的，一方面是因为我读个研究生出来还是搞Java那一套，总感觉有点亏，而且应该以后加班很严重，更像是体力活，但是我觉得可以试着在数据挖掘方向发挥我的优势，虽然我还不知道我在这个方向上是否有优势:joy:。另一方面这个方向还是和数学很有关系的，我觉得如果想在事业上有建树的话没法脱离数学，除非是搞Java开发，这种纯工程的。最后即使我发现我不适合搞数据挖掘这一块，我应该还有时间可以重拾老本行，看看视频背一下Java的面试题，感觉还是能够在校招之前准备好Java岗的面试的。最后，我也不是指的完全抛弃Java，我还是会时不时的复习设计模式，以及我购买的[Java小册](https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535)，看这些文章其实睡眠好，身体没有不舒服，其实阅读起来还挺有意思的。此外，leecode刷题是得一直保持的，也是在为了面试而做准备。
 
+##### 2021/4/15
 
+> the key part of this meditation is that you observe your mind. you stop becoming a participant in your thoughts and emotions, and you observe them.
+>
+> these thoughts arise. I notice them, I register them, and then I refocus on my breath.
 
+来自[大多数人都搞错了冥想的意义｜分享我的冥想](https://www.bilibili.com/video/BV1XA411N7ZU?from=search&seid=13503127923131393835)
 
+##### 2021/5/9
 
-
-
-
-
-
-
-
+五一假期结束后我发现我有一个很明显的变化，那就是阅读文字时的注意力和耐心减少了太多，这是一个非常可怕的变化。很大部分原因是短视频看得太多，我觉得这甚至对我的生理上造成了不健康的改变。
 
 
 

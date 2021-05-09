@@ -87,6 +87,8 @@ String->int		Integer.ParseInt(str)
 5. python无法导入自己的模块的解决办法
 
    参考文章：https://www.cnblogs.com/yibeimingyue/p/11367614.html，这个和Java很相似，需要标记**source目录**
+   
+6. ##### [python buildin 中的一些类或方法的内容都是pass？](https://blog.csdn.net/bocai_xiaodaidai/article/details/111870708)
 
 
 
@@ -167,6 +169,26 @@ Test.prt(test,'helloooo')  #这种方式更加接近本质，显示传递对象
 
 #### type hints
 
+参考：[python模块typing的作用](https://www.cnblogs.com/angelyan/p/11121859.html)
+
+该博客说得很清楚了，但是 在阅读[Type Hints笔记](https://zhuanlan.zhihu.com/p/346415599)中我发现type hints其实还涉及了类似Java泛型，比如`List[str]`、`Union[str,int,float]`、`Tuple[int,...]`（注意这里的List等不同于`list`、`tuple`等，都是`typing`包中的，需要引入`typing`包）
+
+#### 魔法方法
+
+暂时不做系统的总结，因为还没有思路。但是不得不说应用场景太多了
+
+#### 张量的`axis`参数🎈
+
+![axis](python学习记录.assets/20200320204758144.jpg)
+
+这个图还是那么的经典，我发现只要涉及到张量，说小点矩阵的统计、数据特征，永远离不开`axis`参数。我在这里再次用我自己的话描述一下：以上图为例子，`axis=1`为将这一**列**的数值拿到一起进行运算，不管是`sum(axis=1)`,`mean(axis=1)`，都是将这一列的1,2,3,4,5,6数值作为输入，得到一个结果。
+
+
+
+
+
+
+
 
 
 
@@ -176,4 +198,3 @@ Test.prt(test,'helloooo')  #这种方式更加接近本质，显示传递对象
 - **python上的正则化要学习，先调研	2021/4/16**
 
   
-

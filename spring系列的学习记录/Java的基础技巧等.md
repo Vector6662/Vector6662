@@ -490,7 +490,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
 
 
 
-## FunctionalInterface：Java8的新特性
+## FunctionalInterface：Java 8的新特性🎈
 
 > 写在前面：本质是**回调机制**，而且一个很有意思但我过了很久才发现的点是，那些能够采用lambda表达式，更本质说是实现回调的参数，无一列外都是`Interface`，这其实是显而易见的，但是很少有总结这个现象。
 
@@ -603,6 +603,84 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 这篇文章同时也回答了**为什么传递给匿名内部类的参数必须声明为final？**。我特地复习了一下C语言的内存结构，联系了起来，我发现其实关键字`new`得到的对象其实是放在**堆**中的，相当于C语言`malloc()`得到的。于是除非显式释放掉这段空间或者整个程序结束，而不会像栈中的方法一样，调用完毕后就自行释放。于是在方法作用域内的变量传递给内部类是不合法的，因为该变量一定会在方法调用完毕后释放。
 
+## JMM（Java内存模型）[^2]🎈
+
+在学习JVM锁[^3]时接触到了Java对象的内存结构，于是打算深入一下JMM体系。
+
+[Java内存区域（运行时数据区域）和内存模型（JMM）](https://www.cnblogs.com/czwbig/p/11127124.html)这篇文章写得实在太好了，我以下的内容都会基于这篇文章写下我的理解。
+
+之所以说这篇文章写得好，因为它不经意间说出了JVM锁，或说产生多线程问题的根本原因：方法区（或元空间）和堆都是**线程共享**的❗
+
+目前觉得JMM模型比较难理解的部分是：
+
+- JDK8前：方法区
+- JDK8以后：元数据区（metaspace）
+
+这是因为这个区域的变化，更准确说是优化  挺大，以至于有点绕。
+
+但是我觉得对这个区域进行优化的根本原因是为了解决OOM（OutOfMemoryError，注意哦这属于Error，而不是Exception，没法通过编码解决，而是JVM自身产生的问题）。那为什么方法区会有OOM的问题呢？于是可以先理解一下方法区。
+
+#### 方法区
+
+<img src="Java的基础技巧等.assets/14923529-b96312d95eb09d15.png" alt="JDK8前的内存模型" style="zoom: 67%;" />
+
+- 方法区是由永久代（PermGen[^4]）实现的，我觉得既然新生代、老年代、永久代都是xx代，那么方法区其实和堆（heap）应该是同宗的。下面这段话也印证了该观点：
+
+  > Java 虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫做 Non-Heap（非堆），目的应该是与 Java 堆区分开来。[^2]
+
+- 方法区和其他区域一样，都是1️⃣由JVM统一分配空间。同时，2️⃣ GC回收机制在这个部分的操作是比较消极的[^2]，这导致空间越来越少。这两点是导致OOM的关键原因❗
+
+- 对于永久代的功能，[深入探究 JVM | 探秘 Metaspace](https://www.sczyh30.com/posts/Java/jvm-metaspace/)这篇文章说的很好：
+
+  > 在 HotSpot JVM 中，永久代中用于存放1️⃣**类和方法的元数据**以及2️⃣**常量池**，比如`Class`和`Method`。每当一个类初次被加载的时候，它的元数据都会放到永久代中。
+
+- 对于方法区和永久代，还可以再阅读一下这篇文章：https://blog.csdn.net/u010325193/article/details/86746447
+
+  我还没有仔细阅读，等越读过后再写感悟。
+
+#### 元空间（metaspace）
+
+<img src="Java的基础技巧等.assets/14923529-c0cbbccaa6858ca1.png" alt="图摘自《码出高效》" style="zoom:67%;" />
+
+- 我觉得元空间的其中一个优化很深刻，那就是把之前方法区中的字符串常量转移到了堆中。这样做优秀的地方在于，其实字符串常量不就是个**String对象**吗？对Java面向对象思想理解深刻的人才有这样的觉悟👌。
+- 将永久代移除而采用metaspace其实核心就是为了解决OOM的问题，怎么解决的呢？说起来也很简单，不是说方法区是由JVM分配空间，从而会有OOM的风险吗，那现在就不要JVM来管理这个区域的空间了，而是直接由本地内存分配，这样类的元数据分配只受本地内存大小的限制。[^5]
+
+#### 堆（heap）
+
+> 此内存区域的**唯一目的**就是存放对象实例，几乎所有的对象实例都在这里分配内存。[^2]
+
+这个区域就会涉及到JVM锁了。其实这句话很不准确，说得好像元空间就不会涉及到JVM锁了？元空间中有类的元数据，也就是Class类的对象的。既然是对象，那就一定会有对象头，而对象头又分为两个部分：1️⃣ Mark word   2️⃣元数据指针[^3]
+
+#### 其他
+
+我将这些概念一起说，具体的可以看这篇文章[^2]
+
+感觉除了方法区和堆以外，其他的区都是线程私有的，这也说明了线程是操作系统能够进行运算调度的最小单位。
+
+**栈帧**这个概念是比较核心的，<u>它是方法运行的基本结构</u>。同时，一个虚拟机栈会压入很多个栈帧，处于栈顶的栈帧为当前活动栈帧。
+
+**虚拟机栈**会有两个两种Error，其中一种是StackOverflowError，这是一种很经典的Error，一般在由递归的情况下容易发生，这时虚拟机栈中的栈帧太多，超过了虚拟机锁允许的深度。
+
+
+
+## JVM锁[^3]
+
+#### 快速调研：
+
+- 文章中我觉得最深刻的一句话是
+
+  > 怎么实现多线程之间的互斥呢？
+  >
+  > **引入“中间人”即可。**
+
+  因为在JMM模型中，堆区是线程共享的（方法区也是），就会发生多个线程同时访问堆中的同一个对象的情况。于是有了Java对象的**Mark Word**这个区域。
+
+- 加了``synchronized `关键字，读锁才能访问，没加的直接访问。就这么简单。
+
+- 注意由于堆区和方法区中存放的对象的不同（分别是Object对象和Class对象），锁又分为**this锁**和**Class锁**，这两种锁是不一样的。
+
+- 有一个细节需要注意，锁是**对象粒度**的，而非方法粒度。也就是说，加锁的目标永远都是对象而非方法。那么，同一个类中`synchronized method m1`中可以调用`synchronized method m2`。[^3]
+
 
 
 
@@ -611,17 +689,17 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 ## 反射🎈
 
-这是一个大体系
+会涉及到JVM和JMM（Java内存模型）。现在发现如果要学会Java并发，或者JVM锁，就得搞明白JMM。
 
 ### 快速调研
 
-- > 加载完类之后，在堆内存的**方法区**中就产生了一个**Class类型的对象**（**一个类在内存中只有一个Class对象**），这个对象包含了该类的完整信息。
+- > 加载完类之后，在**方法区**中就产生了一个Class类型的对象**（**一个类在内存中只有一个Class对象），这个对象包含了该类的完整信息。
   >
   > 这个对象（Class类型）就像一面镜子，透过这个镜子看到了类的一切结构。
   >
   > 一个类被加载（通过ClassLoader）后，类的整个结构都会被封装在class对象中。
 
-  <img src="Java的基础技巧等.assets/7baac7778c6a41aa89b237bbec057ce6~tplv-k3u1fbpfcp-watermark.image" alt="图片.png" style="zoom:50%;" />
+  <img src="Java的基础技巧等.assets/7baac7778c6a41aa89b237bbec057ce6~tplv-k3u1fbpfcp-watermark.image" alt="图片.png" style="zoom: 50%;" />
   
 - 获取Class类的实例的四种方法：
 
@@ -629,6 +707,8 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
   2. `Class clazz = person.getClass();`：若已知某个类的**实例**，通过该实例的`getClass()`方法来获取
   3. `Class clazz = Class.forName("demo.Student");`：前提是知道该类的**全包名**，而非类的路径。如`Class.forName("com.mysql.cj.jdbc.Driver");`
   4. （了解）`Integer.TYPE`：基本**内置**数据类型的封装类有一个TYPE属性
+
+  调用这四种方式的其中一种后，你要的那个类就会被加载到JVM的方法区中，成为Class类型的对象。
 
 - 这里就可以补充以前学JDBC的时候`Class.forName("com.mysql.cj.jdbc.Driver");`这段代码的作用 了：[^1]
 
@@ -639,7 +719,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 - [学习java应该如何理解反射？](https://www.zhihu.com/question/24304289/answer/694344906)这个回答信息量很大！
 
-  - 先说说对`ClassLoader`的理解：将*.class字节码文件**load**到内存中，并且返回Class对象。该类主要就做这一项工作。
+  - 先说说对`ClassLoader`的理解：将*.class字节码文件通过ClassLoader加载到内存中，并且返回Class对象。该类主要就做这一项工作。
 
   - Class类的理解：
 
@@ -679,24 +759,34 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
     >所以，本质上Class对象要想创建实例，其实都是通过**构造器对象**。<u>如果没有空参构造对象,就无法使用</u>`clazz.newInstance()`，必须要获取其他有参的构造对象然后调用构造对象的`newInstance()`。
 
     > 所以，要想调用`clazz.newInstance()`，必须保证编写类的时候有个**无参构造**。
+    
+    虽然Class对象的`newInstance()`没有那么友好，不接受参数，但是可以通过先获取该Class对象的`Constructor`对象，然后用该其`newInstance()`方法。
+    
+    
 
 - 学到这里，我倒是渐渐能够理解`Class`对象的一种经典定义了：包含一个类（准确的说是A.class文件）的所有信息的对象，且**一个类在内存中有且只有一个`Class`对象**。
 
 - 一个无意中捕获的线索：（[来源](https://www.zhihu.com/question/29996850/answer/47429324)）
 
-  > 另一个是由于使用反射或动态语言而导致不断有新类加载，但之前被加载的类没有被卸载导致类元数据所使用的内存空间越来越多。
+  > 另一个是由于使用反射或动态语言而导致不断有新类加载，但之前被加载的类没有被卸载导致类元数据所使用的内存空间（具体指方法区）越来越多。
 
-  我的理解是，Java如果没有引入反射，就是静态语言，在程序编译过后产生的.class字节码文件会被加载到内存生成class对象，**并且在RUNTIME阶段 这些class对象就会一直在内存中，不会有任何改变或新增class对象，只能读取用来生成相应的对象**，这也是静态的原因。根据此思考，反射带来的动态应该就是能够修改这些class对象（只是猜测，很有可能不可以，看了 `Class` 源码基本都只有get方法，没有set或add），或者**创建新的class对象**，比如动态代理。
+  我对这段话有两点理解：
+  
+  1. Java如果没有引入反射，就是静态语言，在程序编译过后产生的.class字节码文件会被加载到内存生成class对象，**并且在RUNTIME阶段 这些class对象就会一直在内存中，不会有任何改变或新增class对象，只能读取用来生成相应的对象**，这也是静态的原因。根据此思考，反射所带来的动态应该就是能够修改这些class对象（只是猜测，很有可能不可以，看了 `Class` 源码基本都只有get方法，没有set或add），或者**创建新的class对象**，比如动态代理。
+  
+  2. 正因为反射能够在**运行时**新加载一些类到方法区，会导致方法区（其通过永久代实现）会不断增大，导致万恶的OOM（*OutOfMemoryError*，内存溢出）。这应该是因为方法区的空间是由JVM分配，是极其有限的，加上方法区中甚至将字符串常量也存入，让原本拮据的方法区内存雪上加霜。
+  
+     于是在JDK8以后，将永久代移除，引入了metaspace（元数据区域），其空间分配直接由**本地内存**决定。我觉得主要就是为了解决上面的OOM问题，就不必进行虚拟机调优了（感觉很高大上）。
 
 ### 类加载器，双亲委派模型
 
-##### 参考文章一：[好怕怕的类加载器](https://zhuanlan.zhihu.com/p/54693308)
+#### 参考文章一：[好怕怕的类加载器](https://zhuanlan.zhihu.com/p/54693308)
 
 - 这篇文章写得太全面了，我简直跪了：
 
   > **面试官插嘴：ExtClassLoader为什么没有设置parent？**
   >
-  > 因为BootstrapClassLoader是由c++实现的，所以并不存在一个Java的类，因此会打印出null，所以在ClassLoader中，null就代表了BootstrapClassLoader（有些片面）。
+  > 因为BootstrapClassLoader是由**c++**实现的，所以并不存在一个Java的类，因此会打印出null，所以在ClassLoader中，null就代表了BootstrapClassLoader（有些片面）。
 
   文章中有提到如何实现一个`ClassLoader`，惊喜的是使用到了**模板方法**模式！原来实现一个`ClassLoader`用到了该模式：只需要重写`findClass()`方法即可，看完`ClassLoader#loadClass()`源码其实就能明白原因。
 
@@ -714,7 +804,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
   注意上面加粗，只有被**当前**类加载器加载的才会返回哦，其他类加载器加载的是不会返回的。
 
-##### 参考文章二：[Java 类加载器（ClassLoader）的实际使用场景有哪些？](https://www.zhihu.com/question/46719811/answer/1739289578)
+#### 参考文章二：[Java 类加载器的实际使用场景有哪些？](https://www.zhihu.com/question/46719811/answer/1739289578)
 
 - > 因为一个类的**全限定名**以及**加载该类的加载器**两者共同形成了这个类在JVM中的惟一标识，这也是阿里pandora实现依赖隔离的基础。
 
@@ -756,3 +846,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 ---
 
 [^1]:[老铁们想知道 Class.forName(“com.mysql.cj.jdbc.Driver“) 这个加载类是干啥用的吗](https://blog.csdn.net/m0_45067620/article/details/109169247)
+[^2]: [Java内存区域（运行时数据区域）和内存模型（JMM） - czwbig - 博客园 (cnblogs.com)](https://www.cnblogs.com/czwbig/p/11127124.html)
+[^3]: [漫画：从JVM锁扯到Redis分布式锁 (juejin.cn)](https://juejin.cn/post/6958250838103949343)
+[^4]: Permanent Generation的缩写
+[^5]:[深入探究 JVM | 探秘 Metaspace | 「浮生若梦」 - sczyh30's blog](https://www.sczyh30.com/posts/Java/jvm-metaspace/)

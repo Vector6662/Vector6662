@@ -9,10 +9,10 @@
 如经典的例子：
 
 ```java
-String str = "123";
-func(str);
-void func(String str){
-    str="987";
+String sb = "iphone";
+func(sb);
+void func(String builder){
+    builder = "ipad";
 }
 ```
 
@@ -20,13 +20,13 @@ void func(String str){
 
 <img src="https://pic1.zhimg.com/80/d8b82e07ea21375ca6b300f9162aa95f_1440w.jpg?source=1940ef5c" alt="img" style="zoom: 50%;" />
 
-然后执行`str="987"`将会成这样：
+然后执行`builder="ipad"`将会成这样：
 
 <img src="https://pic4.zhimg.com/80/46fa5f10cc135a3ca087dae35a5211bd_1440w.jpg?source=1940ef5c" alt="img" style="zoom:50%;" />
 
-想要真正改变外层`str`变量（全局的`str`），就得而且只能通过**调用方法**来改变，比如`str.replace('1','0');`。
+想要真正改变外层`str`变量（全局的`str`），就得而且只能通过**调用方法**来改变，比如`builder.replace('1','0');`。
 
-这和c语言的指针是相通的，要改变指针的**指向**的值就得通过`*pt=123;`，其实也可也理解为调用了方法，方法名称为`*`:joy:
+这和c语言的指针是相通的，要改变指针的**指向**的值就得通过`*ptr="123";`。
 
 
 
@@ -458,7 +458,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
 
 
 
-## 注解：
+## 注解 Annotation：
 
 ### 快速调研：
 
@@ -470,13 +470,13 @@ enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
 
   @Retention(RetentionPolicy.RUNTIME)
 
-  @Inherited、@Document
+  @Inherited、@Documented
 
-- `@Retention(Value="RetentionPolicy.RUNTIME")`
+- `@Retention(Value=RetentionPolicy.RUNTIME)`  //Retention 保持
 
   表示我们的注解在什么地方有效
 
-  runtime>class>source
+  runtime>class>source，分别指代运行期间、编译期间、编码期间。但一般都是RUNTIME，因为一般注解是用来实现反射的。
 
 - `@Inherited`
 
@@ -616,9 +616,9 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 - JDK8前：方法区
 - JDK8以后：元数据区（metaspace）
 
-这是因为这个区域的变化，更准确说是优化  挺大，以至于有点绕。
+这是因为这个区域的变化，更准确说是优化挺大，以至于有点绕。
 
-但是我觉得对这个区域进行优化的根本原因是为了解决OOM（OutOfMemoryError，注意哦这属于Error，而不是Exception，没法通过编码解决，而是JVM自身产生的问题）。那为什么方法区会有OOM的问题呢？于是可以先理解一下方法区。
+但是我觉得对这个区域进行优化的根本原因是为了解决OOM（OutOfMemoryError，注意哦这属于Error，而不是Exception，没法通过编码解决，因为这是JVM产生的问题）。那为什么方法区会有OOM的问题呢？于是可以先理解一下方法区。
 
 #### 方法区
 
@@ -628,44 +628,69 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
   > Java 虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫做 Non-Heap（非堆），目的应该是与 Java 堆区分开来。[^2]
 
-- 方法区和其他区域一样，都是1️⃣由JVM统一分配空间。同时，2️⃣ GC回收机制在这个部分的操作是比较消极的[^2]，这导致空间越来越少。这两点是导致OOM的关键原因❗
+- 永久代导致OOM的两点关键原因❗：
+
+  1️⃣方法区和其他区域一样，都是由JVM统一分配空间；
+
+  2️⃣同时，GC回收机制在这个部分的操作是比较消极的[^2]，这导致加载的类越堆越多，空间越来越少。
 
 - 对于永久代的功能，[深入探究 JVM | 探秘 Metaspace](https://www.sczyh30.com/posts/Java/jvm-metaspace/)这篇文章说的很好：
 
   > 在 HotSpot JVM 中，永久代中用于存放1️⃣**类和方法的元数据**以及2️⃣**常量池**，比如`Class`和`Method`。每当一个类初次被加载的时候，它的元数据都会放到永久代中。
 
-- 对于方法区和永久代，还可以再阅读一下这篇文章：https://blog.csdn.net/u010325193/article/details/86746447
+- 对于方法区和永久代，还可以再阅读一下这两篇文章：
 
+  https://blog.csdn.net/u010325193/article/details/86746447、https://zhuanlan.zhihu.com/p/363224802
+  
   我还没有仔细阅读，等越读过后再写感悟。
 
 #### 元空间（metaspace）
 
-<img src="Java的基础技巧等.assets/14923529-c0cbbccaa6858ca1.png" alt="图摘自《码出高效》" style="zoom:67%;" />
+<img src="Java的基础技巧等.assets/14923529-c0cbbccaa6858ca1.png" alt="图摘自《码出高效》" style="zoom: 60%;" />
 
-- 我觉得元空间的其中一个优化很深刻，那就是把之前方法区中的字符串常量转移到了堆中。这样做优秀的地方在于，其实字符串常量不就是个**String对象**吗？对Java面向对象思想理解深刻的人才有这样的觉悟👌。
-- 将永久代移除而采用metaspace其实核心就是为了解决OOM的问题，怎么解决的呢？说起来也很简单，不是说方法区是由JVM分配空间，从而会有OOM的风险吗，那现在就不要JVM来管理这个区域的空间了，而是直接由本地内存分配，这样类的元数据分配只受本地内存大小的限制。[^5]
+- metaspace也叫堆外内存[^8]，这个名字叫得很透彻啊！！！
+- 我觉得元空间的其中一个优化很深刻，那就是把之前方法区中的**字符串常量转移到了堆中**。这样做优秀的地方在于，其实字符串常量不就是个**String对象**吗？对Java面向对象思想理解深刻的人才有这样的觉悟👌。
+- 将永久代移除而采用metaspace其实核心就是为了解决OOM的问题，怎么解决的呢？说起来也很简单，不是说方法区是由JVM分配空间，从而会有OOM的风险吗，那现在就不要JVM来管理这个区域的空间了，而是**直接由本地内存分配**，这样类的元数据分配只受本地内存大小的限制。[^5]
+
+
 
 #### 堆（heap）
 
+这个部分的知识点挺多的，涉及到了GC、内存分代模型[^7]、四种引用类型等等。
+
 > 此内存区域的**唯一目的**就是存放对象实例，几乎所有的对象实例都在这里分配内存。[^2]
 
-这个区域就会涉及到JVM锁了。其实这句话很不准确，说得好像元空间就不会涉及到JVM锁了？元空间中有类的元数据，也就是Class类的对象的。既然是对象，那就一定会有对象头，而对象头又分为两个部分：1️⃣ Mark word   2️⃣元数据指针[^3]
+这个区域就会涉及到JVM锁了。其实这句话很不准确，说得好像元空间就不会涉及到JVM锁了？元空间中有类的元数据，也就是Class类的对象。既然是对象，那就一定会有对象头，而对象头又分为两个部分：1️⃣ Mark Word   2️⃣元数据指针[^3]。这里的JVM锁就在Mark Word中实现。
 
-#### 其他
+**GC线程**：
 
-我将这些概念一起说，具体的可以看这篇文章[^2]
+**内存分代模型**：上面的图其实说得很明白了，目前觉得分代的与GC线程有关。
 
-感觉除了方法区和堆以外，其他的区都是线程私有的，这也说明了线程是操作系统能够进行运算调度的最小单位。
+**4种引用类型**[^6]：堆也是GC的主要区域，这就涉及到了四种引用类型[^6]。我是在学习ThreadLocal的时候才接触到这四种应用类型的
 
-**栈帧**这个概念是比较核心的，<u>它是方法运行的基本结构</u>。同时，一个虚拟机栈会压入很多个栈帧，处于栈顶的栈帧为当前活动栈帧。
 
-**虚拟机栈**会有两个两种Error，其中一种是StackOverflowError，这是一种很经典的Error，一般在由递归的情况下容易发生，这时虚拟机栈中的栈帧太多，超过了虚拟机锁允许的深度。
+
+
+
+#### 线程私有区
+
+我将这些概念一起说，具体的可以看这篇文章[^2]，以及下面这幅图，因为这幅图能够很好的体现**线程私有**的特点。
+
+可以发现，除了方法区和堆以外，其他的区都是**线程私有**的，这也说明了线程是操作系统能够进行运算调度的最小单位。这同样也是为什么我把虚拟机栈、程序计数器、本地方法栈都归为线程私有区，因为他们都是线程独有的。下面是我觉得比较重要的几个概念：
+
+**虚拟机栈**会有两个两种Error，其中一种是StackOverflowError，这是一种很经典的**Error**，一般在由递归的情况下容易发生，这时虚拟机栈中的栈帧太多，超过了虚拟机锁允许的深度。
+
+**栈帧**这个概念是比较核心的，**它是方法运行的基本结构**。同时，一个虚拟机栈会压入很多个栈帧，处于**栈顶**的栈帧为当前活动栈帧。
+
+<img src="Java的基础技巧等.assets/68747470733a2f2f6d792d626c6f672d746f2d7573652e6f73732d636e2d6265696a696e672e616c6979756e63732e636f6d2f323031392d332f4a564de8bf90e8a18ce697b6e695b0e68daee58cbae59f9f2e706e67" alt="img" style="zoom: 67%;" />
+
+
 
 
 
 ## JVM锁[^3]
 
-#### 快速调研：
+### 快速调研
 
 - 文章中我觉得最深刻的一句话是
 
@@ -673,15 +698,237 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
   >
   > **引入“中间人”即可。**
 
-  因为在JMM模型中，堆区是线程共享的（方法区也是），就会发生多个线程同时访问堆中的同一个对象的情况。于是有了Java对象的**Mark Word**这个区域。
+  因为在JMM模型中，堆区、方法区是线程共享的，就会发生多个线程同时访问堆中的同一个对象的情况。于是有了Java对象的**Mark Word**这个区域。
 
-- 加了``synchronized `关键字，读锁才能访问，没加的直接访问。就这么简单。
+- 加了``synchronized `关键字，获取了锁才能访问，没加的直接访问。就这么简单。
 
-- 注意由于堆区和方法区中存放的对象的不同（分别是Object对象和Class对象），锁又分为**this锁**和**Class锁**，这两种锁是不一样的。
+- 注意由于堆区和方法区中存放的对象的不同（分别是Object对象和Class对象），从而锁又分为**this锁**和**Class锁**，这两种锁是不一样的。
 
-- 有一个细节需要注意，锁是**对象粒度**的，而非方法粒度。也就是说，加锁的目标永远都是对象而非方法。那么，同一个类中`synchronized method m1`中可以调用`synchronized method m2`。[^3]
+- 有一个细节需要注意，锁是**对象粒度**的，而非方法粒度。也就是说，被加锁的永远都是对象而非方法。那么，同一个类中`synchronized method m1`中可以调用`synchronized method m2`[^3]，因为都是被加了同一把锁。
+
+### 锁升级
+
+<img src="Java的基础技巧等.assets/27fbaf6ad7b74bc5887e470bad35127b~tplv-k3u1fbpfcp-watermark.image" alt="图片.png" style="zoom: 25%;" />
+
+注意❗❗❗，锁升级的前提是加了`synchronized`锁的对象才会有，没有加锁的对象是任意被多线程访问的。
+
+**无锁**：对象刚创建的时候，这个时候还没有线程访问该对象。
+
+**偏向锁**：当该对象第一次被一个线程访问时，“线程ID“会被修改。这么做的原因大概有两个：1.此时此刻是没有锁竞争的，因为只有一个线程访问该对象；2.基于实际情况考量：大部分情景是单线程，不存在锁竞争的，都是一个线程访问一个对象，此时申请更高级别的锁显得有点高射炮打蚊子。
+
+**轻量级锁**：此时发生了锁竞争，多线程环境！于是得升级为轻量级锁，可以理解为一种自旋锁，没有获取到锁的线程会在门口自旋，直到得到对象的锁。这很明显会带来一个问题：如果竞争统一对象锁的线程太多，会消耗太多的CPU资源。
+
+**重量级锁**：上面的三种其实都是JVM提供的锁，当JVM提供的这些锁也不能解决问题时，便升级到重量级锁。为什么叫重量级呢？因为该锁是要向操作系统申请的，需要用户态向内核态切换，是很兴师动众的事情，所以很有重量喽🤣。该锁是一种用空间换取时间的方式：
+
+> 此时就会再次升级，变成传统意义上的重量级锁，本质上操作系统会维护一个**队列**，用**空间换时间**，避免多个线程同时自旋等待耗费CPU性能，等到上一个线程结束时唤醒等待的线程参与新一轮的锁竞争即可。
 
 
+
+## AQS—AbstractQueueSynchronizer
+
+这是一个大坑，目前为止发现最大的坑。慢慢啃吧
+
+### synchronized调研
+
+- 生产者首先抢占到对象的锁（这是前提），当判断一个生产者线程无法插入数据时，就让它在阻塞队列里休眠（`this.wait()`），此时生产者线程会**释放CPU资源**，等到消费者抢到CPU执行权并取出数据后，再由消费者唤醒生产者继续生产。
+
+  来自：[等待唤醒机制：wait/notify](https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535/gertlc#s6PlC)
+
+- ❗在synchronized下会维护一个**阻塞队列**，所有调用`this.wait()`后被阻塞的==当前==线程都会保存在这个队列里。当调用`this.notify()`后会将这个阻塞队列中的线程**随机**唤醒一个。更推荐采用`notifyAll()`，唤醒阻塞队列中所有线程，让他们竞争锁资源。
+
+- 这个链接帮助我复习了一下线程状态基础知识。我觉得需要在细致学习一下三种阻塞状态：同步阻塞、等待阻塞、其他阻塞。有一点非常关键，容易忽视：三种细分的阻塞状态都会释放CPU，其他线程才有机会抢占，不然会造成死锁。
+
+  来自：[Java线程状态有哪些](https://www.html.cn/qa/other/21700.html)
+
+### AQS源码阅读
+
+- 来源：https://javadoop.com/post/AbstractQueuedSynchronizer
+
+- ReentrantLock是一把锁，但是其核心功能：lock()和unlock() 并不是自己实现的而是内部内Sync实现的。注意下面的继承体系：
+
+  <img src="Java的基础技巧等.assets/image-20210521205405971.png" alt="image-20210521205405971" style="zoom:50%;" />
+
+#### 分析FairSync的源码：
+
+**🎈如何实现抢占锁？——`acquire()`**
+
+- 先尝试直接抢占：`tryAcquire()`。
+
+  为什么先尝试？因为有可能出现以下两种情况中的一种：
+
+  ​	1️⃣此时锁正好空闲，且阻塞队列中也**没有**其他线程正在排队；
+
+  ​	2️⃣当前线程重入锁。
+
+  搏一搏 单车变摩托！万一满足上面的其中一个，就不用将当前线程放入到阻塞队列中了，直接占有锁！
+
+  - `tryAcquire()`代码逻辑：
+
+    拿到当前锁的状态(state)。（提一嘴，acquire具体指的是获取锁，tryAcquire()就是尝试获取锁的意思）
+
+    state=0表明此时没有线程正在持有锁，锁空闲；state=1表示有线程获取了锁；state>1表示重入了，即线程重复获取它已经拥有的锁，数字代表了重入次数。
+    
+  - 当state=0时，锁空闲。但是！不一定当前线程就能获取到锁，因为这是公平锁，阻塞队列中可能有线程，则要优先满足队列中的线程获取锁（就很绅士）。
+    
+    如果刚好满足条件1️⃣： state=0，且阻塞队列无线程，那么调用`compareAndSetState(0, acquires)`就会返回true。
+    
+    ❗下面好好唠唠CAS操作：
+    
+    ```java
+    //如果当前锁状态state=expect，那么就将state更新为update
+    boolean compareAndSetState(int expect,int update);
+    ```
+    
+    ❓为什么不直接更新state，而是要先比较再更新呢？是因为并发！当前线程正在占有锁的**几乎同时**，另一个线程抢先占有了这把锁，此时state会变成非0，和expect参数不同。可以把这种先比较再设置值的方法都统称为CAS操作，后面还会见到`compareAndSetTail(...)`、`compareAndSetHead(...)`等等。
+    
+    我觉得这会是一个面试考点，因为确实很考水平。
+    
+  - 当state>0时，不管是锁被占用（state=1），还是重入（state>1，条件2️⃣），其实都是一个意思，那就是这个锁正在被占用。那么是**谁占用的**呢？state不会反映这一点，但谁占用的这件事很重要，如果恰好是自己占用的，那就是重入，state自增一下返回true，干净又轻松。如果是被别人占用的，那这次`tryAcquire()`就失败了，返回false，得另寻路子。
+    
+    锁对象有两个重要的属性：**state**：表明锁状态；**exclusiveOwnerThread**：独占该锁的线程，This is exactly what I need！
+    
+    直接比较`currentThread==exclusiveOwnerThread`，如果正好相同，则是重入，这时需要更新state（`state++`），表明又重入了一次，返回true。既然是重入，就不会出现并发问题，直接调用`setState()`更新state，不必用CAS操作，不必担心并发问题。
+    
+  - 前面两种情况下都失败了，返回false。说明赌输了，不过没关系，接下来就将这个线程放到阻塞队列里吧。
+
+- tryAcquire()失败，该怎么办？——**先`addWaiter(...)`，再`acquireQueued(...)`**
+
+  这个方法是将当前线程**加入到阻塞队列**中后**挂起**（两步操作）。再具体一点，将**当前线程加入到阻塞队列的队尾然后挂起**。
+
+  注意❗ 将线程加入到阻塞队列队尾的时候也会出现并发问题！若多个线程都要加入到阻塞队列中，必定会同时抢占队尾，和上面的`compareAndSetState`情况相似，但这个时候调用的是`compareAndSetTail`。我现在知道**CAS**这个缩写是怎么来的了：`compareAndSetXxx`，有并发问题时就会调用这类方法避免**丢失修改**（用事务中的概念比喻一下），核心是先比较（compare），再set。
+
+  一定会有抢占队尾失败的情况，怎么办？一直循环，一直抢，抢到为止！就是这么简单粗暴😂。用专业术语来说，是**采用自旋的方式入队**。
+
+  - ✨**加入到阻塞队列中**：`addWaiter(Node.EXCLUSIVE), arg)`：
+
+    自旋入队。我发现我上边说得很清楚了，暂时这里就不详细分析了。但是要注意，这个方法返回的还是封装了当前线程的node。
+
+  - ✨**挂起**：`acquireQueued(addWaiter(Node.EXCLUSIVE), arg)`：
+
+    也是类似自旋的方式，直到挂起为止。`acquireQueued`接受的参数特别注意，即**封装了当前线程的node**。为什么说重要？因为`acquireQueued`的作用是：==让**当前**线程要么直接获取到锁，要么挂起（park）==。
+
+  具体是怎么做的呢？
+
+  - `if (p == head && tryAcquire(...))`（贼心不死😂）：
+
+    还是先搏一搏。如果封装了当前线程的node（以下简称当前node）的前驱(`p = node.predecessor()`)正好就是head，即正在占有锁的节点，那就很nice，我就是太子！接着调用tryAcquire()，刺探一下皇上挂没挂，挂了就直接继位。
+
+    很不幸的是，要么当前node不是太子，要么没抢赢其他的node（`tryAcquire()`返回true，但`compareAndSetState()`时输了），那就尝试挂起吧，调用`shouldParkAfterFailedAcquire(...)`。
+
+  - `shouldParkAfterFailedAcquire(...)`：
+
+    就是方法字面意思：当acquire锁失败后，应该**挂起**当前线程吗？
+
+    直到现在，当前线程都是活跃的，没有被挂起。但到了这个时候，就开始严肃地讨论当前线程是不是应该挂起了，毕竟折腾了那么久还没抢到锁，不如考虑一下先挂起，等别的线程来唤醒。
+  
+    什么时候需要挂起呢？这里采用的思路是看**前驱节点**，因为：**当前节点得由其前驱节点唤醒**（这一点应该要看唤醒的代码才能明白）。
+  
+    如果前驱节点的`waitStatus==-1`，表明前驱节点的后继，也就是当前节点需要被唤醒；如果`waitStatus>0`，表明前驱节点撂挑子不干了，俺不排队了！这个时候当前node就得换爹，**迭代地**找一个爹，直到找到一个还要排队的爹。
+  
+  - `parkAndCheckInterrupt()`：
+  
+    当`shouldParkAfterFailedAcquire`返回true后，表明这个线程已经找到了一个靠谱的爹，可以挂起该线程，而`parkAndCheckInterrupt`就是**真正实现挂起**的地方，该方法内部调用了`LockSupport.park(this);`，这时该线程**正式被挂起了**，等待被唤醒。一个细节要注意，线程是被阻塞在了`LockSupport.park(this);`处，下一行`return Thread.interrupted();`是没有被执行的。
+  
+    `LockSupport.park(this);`感觉有点像synchronized方式下的`this.wait()`。
+
+上面分析完了AQS实现锁机制的源码，只能说一句：真TM的牛逼~。本质上还是维护了一个阻塞队列，和synchronized有些相似。
+
+**🎈如何释放锁？——release()**
+
+我觉得得提一嘴什么时候会调用`release()`
+
+```java
+ReentrantLock lock = new ReentrantLock();
+void func(){
+    try{
+        lock.lock();
+    	//...执行业务逻辑;
+    } finally{
+        //unlock中会调用release()，因为unlock和lock一样是ReentrantLock中的方法，本质上是调用AQS中的acquire和release
+    	lock.unlock();
+    }    
+}
+```
+
+也就是说，在调用`unlock()`之前，线程是获取了锁的，不然不可能执行业务逻辑。
+
+调用unlock后，会执行`LockSupport.unpark(s.thread);`唤醒当前线程（head）的后继节点。唤醒了后继节点后，这个后继节点会接着被挂起的地方继续执行，也就是：
+
+```java
+// 又回到这个方法了：acquireQueued(final Node node, int arg)，这个时候，node的前驱是head了
+private final boolean parkAndCheckInterrupt() {
+    LockSupport.park(this); // 刚刚线程被挂起在这里了，unpark后接着这里继续执行！
+    return Thread.interrupted();
+}
+```
+
+🎈**文中的评论区中有整个逻辑流程（放大来看）：**
+
+<img src="Java的基础技巧等.assets/602f37927d9c081db9a6d12c.png" alt="acquire实现流程图" style="zoom:25%;" />
+
+#### 对比NonfairSync和FairSync
+
+参考：https://javadoop.com/post/AbstractQueuedSynchronizer-2
+
+相比之下NonfairSync很流氓，在调用lock()的时候先**直接**CAS抢一波锁，不管有没有别的线程在排队。如果没抢到才会进入`tryAcquire()`。·这个方法和FairSync中有区别，此时NonfairSync还是贼心不死，此时如果锁空闲照样会再CAS抢一波，而不会像FairSync一样要看看阻塞队列中是否有挂起的线程。如果**两次CAS都失败了**，才会像FairSync一样老老实实地加入阻塞队列。
+
+总结起来，FairSync像一位绅士，来的时候就先看看锁空闲不，而且要看看有没有线程正在被挂起排队，都没有才获取锁。而NonfairSync更像一位野蛮人，上来就抢一波锁（CAS），没抢到就看看锁空闲不（`if(state==0)`），空闲的话再抢一波（CAS），两次都失败了才会老老实实排队、挂起。发下没有，这种非公平锁整个过程**完全无视阻塞队列**🤣！眼里只有锁！锁！锁！我要得到它！
+
+### 自己对阻塞队列BlockingQueue的一些思考
+
+[从线程间通信聊到阻塞队列](https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535/gertlc#nkt0X)这篇文章手动实现了BlockingQueue，发现BlockingQueue是线程安全的，支持多线程而不会引发线程安全问题。但是看了BlockingQueue相关的继承树：
+
+<img src="Java的基础技巧等.assets/1620026957533-79b9187c-f673-4b1d-8dba-9cc35c726716.png" alt="图片.png" style="zoom:50%;" />
+
+发现并没有AQS，甚至ReentrantLock参与实现阻塞。其实这篇文章中的“手动实现的阻塞队列”已经给出了答案，会在take()和put()中调用lock()和unlock()。
+
+那么BlockingQueue是如何保证线程安全的呢？答案是阻塞，也可以说是同步（synchronized）。和前面讲的AQS一样，抢占锁，抢占不到就在阻塞队列中挂起，体现在代码上就好像代码运行被卡住了，而事实是因为同步，要等待前面的线程释放占用资源后才能继续运行。
+
+
+
+## 对比JVM锁和AQS
+
+参考文章：[谈谈 synchronized 和 ReentrantLock 的区别](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020最新Java并发进阶常见面试题总结?id=_15-谈谈-synchronized-和-reentrantlock-的区别)。文章谈了三点，我觉得总结得非常精辟！
+
+> 线程对象可以注册到指定的**Condition**中，用ReentrantLock对象结合某个Condition实例可以实现选择性通知。所以`synchronized`关键字相当于整个lock对象只有一个Condition实例。
+
+> `synchronized`只能是非公平锁，而ReentrantLock默认是非公平锁，但是可以设置参数来实现公平锁。
+
+
+
+
+
+## 并发容器总结
+
+参考文章：[并发容器总结](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/并发容器总结?id=一-jdk-提供的并发容器总结)
+
+可以分为两大类：基于`synchronized`实现的，如`Collections.synchronizedMap()`；基于AQS实现的，如`ConcurrentHashMap`。
+
+挖个坑，已经大致看了文章，找个时间总结一下。
+
+- ConcurrentHashMap
+
+  > 一种可行的方式是使用 `Collections.synchronizedMap()` 方法来包装我们的 HashMap。但这是通过使用一个**全局的锁**来同步不同线程间的并发访问，因此会带来不可忽视的性能问题。
+
+- CopyOnWriteArrayList
+
+  > 这和我们之前在多线程章节讲过 `ReentrantReadWriteLock` 读写锁的思想非常类似，也就是读读共享、写写互斥、读写互斥、写读互斥。**写入也不会阻塞读取操作**。
+  >
+  > `CopyOnWriteArrayList` 类的所有**可变操作**（add，set 等等）都是通过创建底层数组的**新副本**来实现的。
+  >
+  > …(略)
+  >
+  > 写完之后呢，就将指向原来内存指针**指向**新的内存，而原来的内存就可以被回收掉了。这样达到了替换的目的。
+
+- ConcurrentLinkedQueue
+
+  > **非阻塞队列**的典型例子是 ConcurrentLinkedQueue。
+  >
+  > 阻塞队列可以通过加锁来实现，非阻塞队列可以通过 **CAS 操作**实现
+
+- BlockingQueue
+
+  > 阻塞队列（BlockingQueue）被广泛使用在“**生产者-消费者**”问题中，其原因是 BlockingQueue 提供了可阻塞的插入和移除的方法。
 
 
 
@@ -814,7 +1061,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
   - `Bootstrap ClassLoader`：<JAVA_HOME>/lib 下，即以`java`开头的**基础**类，如`java.io.* `；
   - `Extention Classloader`：<JAVA_HOME>/lib/ext下，即以`javax`开头的JVM**扩展**类；
-  - `Application Classloader`：自己编写的代码和第三方jar包，写pom文件下的依赖涉及的类都得是这个加载器加载；
+  - `Application Classloader`：自己编写的代码和第三方jar包，且pom.xml文件下依赖涉及的类都得用这个加载器加载；
   - `Custom Classloader`：自定义。
 
 
@@ -843,6 +1090,8 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 
 
+
+
 ---
 
 [^1]:[老铁们想知道 Class.forName(“com.mysql.cj.jdbc.Driver“) 这个加载类是干啥用的吗](https://blog.csdn.net/m0_45067620/article/details/109169247)
@@ -850,3 +1099,6 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 [^3]: [漫画：从JVM锁扯到Redis分布式锁 (juejin.cn)](https://juejin.cn/post/6958250838103949343)
 [^4]: Permanent Generation的缩写
 [^5]:[深入探究 JVM | 探秘 Metaspace | 「浮生若梦」 - sczyh30's blog](https://www.sczyh30.com/posts/Java/jvm-metaspace/)
+[^6]: https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535/izbsgk#49G4D
+[^7]: [Java 程序员必会的「垃圾回收」算法](https://zhuanlan.zhihu.com/p/363224802)
+[^8]:[深入理解堆外内存 Metaspace](https://www.javadoop.com/post/metaspace)

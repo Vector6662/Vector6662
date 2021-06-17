@@ -1,4 +1,4 @@
-1. 弹幕中捕获到一个很形象的解释，对channel和buffer的：channel是轨道（京广线、包兰州线），buffer是货车，也就是buffer会一批一批的将数据送往selector的意思吗？（提醒一下这是双向的）
+1. 弹幕中捕获到一个很形象的解释，对channel和buffer的：channel是轨道（京广线、包兰线），buffer是货车，也就是buffer会一批一批的将数据送往selector的意思吗？（提醒一下这是双向的）
 
 2. 应用程序client只会和buffer交互，不会和channel交互，除非它想卧轨。
 

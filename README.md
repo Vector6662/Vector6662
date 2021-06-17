@@ -2,7 +2,7 @@
 
 
 
-最近的阅读计划：
+**最近的阅读计划：**
 
 - [ ] [MIT-6.824](https://github.com/chaozh/MIT-6.824)分布式系统课程：重点学习一下
 
@@ -14,14 +14,14 @@
 
 
 
-正在学习的开源项目：
+**正在学习的开源项目：**
 
 - [ ] [mini-spring](https://github.com/code4craft/tiny-spring)。自己实现一个spring，当前重点项目。
 - [ ] [秒杀系统](https://github.com/qiurunze123/miaosha)。很经典的项目，完成了大部分，但是停滞了一段时间
 
 
 
-我的面试复习进度：
+**我的面试复习进度：**
 
 - [ ] 阅读[JavaGuide](https://github.com/Snailclimb/JavaGuide)，目前看到了valiate关键字，注意区分Java内存模型和jvm内存模型
 - [ ] JavaGuide中讲到的并发容器
@@ -29,5 +29,6 @@
 
 
 
-LeeCode刷题进度：
+**LeeCode刷题进度：**
 
+🐶🐶🐶

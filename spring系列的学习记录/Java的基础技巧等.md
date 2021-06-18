@@ -107,7 +107,7 @@ message.split("\n|\r\n");//符号 | 便是匹配上一个即可
 
 
 
-## [泛型](https://segmentfault.com/a/1190000014120746)------Generics🎈
+## [泛型](https://segmentfault.com/a/1190000014120746) Generics🎈
 
 #### [泛型类](https://www.cnblogs.com/coprince/p/8603492.html)
 
@@ -603,7 +603,29 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 这篇文章同时也回答了**为什么传递给匿名内部类的参数必须声明为final？**。我特地复习了一下C语言的内存结构，联系了起来，我发现其实关键字`new`得到的对象其实是放在**堆**中的，相当于C语言`malloc()`得到的。于是除非显式释放掉这段空间或者整个程序结束，而不会像栈中的方法一样，调用完毕后就自行释放。于是在方法作用域内的变量传递给内部类是不合法的，因为该变量一定会在方法调用完毕后释放。
 
-## JMM（Java内存模型）[^2]🎈
+## Java内存模型
+
+请区别JMM，是JVM内存模型。Java内存模型指的是Java线程与内存之间的交互模式，而JMM描述的是JVM在运行时用到的区域情况。
+
+<img src="Java的基础技巧等.assets/0ac7e663-7db8-4b95-8d8e-7d2b179f67e8.png" alt="JMM(Java内存模型)" style="zoom: 80%;" />
+
+*图中的 “本地内存 “ 我觉得描述不是很好，用 “线程的工作内存 ” 更准确些。*
+
+主存中的共享变量一般就指堆区或元数据区中的变量，而线程的工作内存因为有线程共享变量副本的存在，就会存在类似数据库并发事务中**丢失修改**问题。
+
+#### volatile
+
+这里就不得不提到volatile关键字，**保证线程共享变量的任何改变对于所有线程而言都是==实时==可见的**。具体来说，线程T1要操作volatile修饰的变量的时候，都不可以直接使用T1自己工作内存中该变量的副本，而必须每次都到主内存中读取（强制）。
+
+但是这种方式的底层是如何实现的呢？javaGuide相关文章中只提到了[CPU 缓存模型](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020最新Java并发进阶常见面试题总结?id=_21-cpu-缓存模型)，没有认真讨论这个问题。而在[Java中volatile的几个问题？ - java小小刀的回答 - 知乎](https://www.zhihu.com/question/31990408/answer/1940692921)却有对volatile的原理在汇编指令层面进行了探讨，可以多看几遍这个视频。
+
+简单来说，一个CPU**写**的时候会**锁总线**（具体是数据总线还是地址总线不清楚），并使写的数据在别的CPU的**缓存行中失效**。多看几遍这个视频，我发现volatile的并发策略是非常非常悲观的，不论是读还是写，都要锁总线，使数据失效。要类比的话，只有数据库中的**可串行化**可以与之匹敌。
+
+
+
+
+
+## JMM（JVM内存模型）[^2]🎈
 
 在学习JVM锁[^3]时接触到了Java对象的内存结构，于是打算深入一下JMM体系。
 
@@ -734,7 +756,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
   来自：[等待唤醒机制：wait/notify](https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535/gertlc#s6PlC)
 
-- ❗在synchronized下会维护一个**阻塞队列**，所有调用`this.wait()`后被阻塞的==当前==线程都会保存在这个队列里。当调用`this.notify()`后会将这个阻塞队列中的线程**随机**唤醒一个。更推荐采用`notifyAll()`，唤醒阻塞队列中所有线程，让他们竞争锁资源。
+- ❗在synchronized下会维护一个线程的**阻塞队列**，所有调用`this.wait()`后被阻塞的==当前==线程都会保存在这个队列里。当调用`this.notify()`后会将这个阻塞队列中的线程**随机**唤醒一个。更推荐采用`notifyAll()`，唤醒阻塞队列中所有线程，让他们竞争锁资源。
 
 - 这个链接帮助我复习了一下线程状态基础知识。我觉得需要在细致学习一下三种阻塞状态：同步阻塞、等待阻塞、其他阻塞。有一点非常关键，容易忽视：三种细分的阻塞状态都会释放CPU，其他线程才有机会抢占，不然会造成死锁。
 
@@ -898,11 +920,17 @@ private final boolean parkAndCheckInterrupt() {
 
 
 
-## 并发容器总结
+## 并发容器
+
+**❗❗快速调研阶段**
 
 参考文章：[并发容器总结](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/并发容器总结?id=一-jdk-提供的并发容器总结)
 
-可以分为两大类：基于`synchronized`实现的，如`Collections.synchronizedMap()`；基于AQS实现的，如`ConcurrentHashMap`。
+可以分为两大类：
+
+1️⃣基于`synchronized`实现的，如`Collections.synchronizedMap()`。这种方式的缺点前面已经提到过，不能**选择性地**唤醒满足某个条件的线程。
+
+2️⃣基于AQS实现的，如`ConcurrentHashMap`。
 
 挖个坑，已经大致看了文章，找个时间总结一下。
 

@@ -233,7 +233,7 @@ System.out.println(list);//输出[11, dw, 0.154, {12=12}]
 
 箭头后面是我自己的话提炼了一下。发现没有，其实这三大类是一个递进关系：首先要创建对象，如何创建？于是有了创建型设计模式；然后创建好了的对象之间的关系，如何组合更优？于是有了结构型；最后将这些对象如何更好地融入业务逻辑中，于是有了行为型。
 
-### 工厂方法或者抽象工厂
+### 工厂方法/抽象工厂
 
 我甚至懒得区分二者之间的差别了，感觉都差不多，区别都不是本质。
 
@@ -346,12 +346,10 @@ enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
 `Cloneable`接口中有这么一段：
 
 > Invoking Object's clone method on an instance that does not implement the Cloneable interface results in the exception CloneNotSupportedException being thrown.
-
-翻译：在一个对象中调用`Object`类的`clone`方法但是没有implement `Cloneable`接口会导致抛出`CloneNotSupportedException`异常。
+>
+> 在一个对象中调用`Object`类的`clone`方法但是没有implement `Cloneable`接口会导致抛出`CloneNotSupportedException`异常。
 
 只提这一句话，好好读读`Cloneable`类的doc，很有意思
-
-
 
 
 
@@ -615,11 +613,15 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 #### volatile
 
-这里就不得不提到volatile关键字，**保证线程共享变量的任何改变对于所有线程而言都是==实时==可见的**。具体来说，线程T1要操作volatile修饰的变量的时候，都不可以直接使用T1自己工作内存中该变量的副本，而必须每次都到主内存中读取（强制）。
+这里就不得不提到**volatile**关键字，它有两层语义：
 
-但是这种方式的底层是如何实现的呢？javaGuide相关文章中只提到了[CPU 缓存模型](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020最新Java并发进阶常见面试题总结?id=_21-cpu-缓存模型)，没有认真讨论这个问题。而在[Java中volatile的几个问题？ - java小小刀的回答 - 知乎](https://www.zhihu.com/question/31990408/answer/1940692921)却有对volatile的原理在汇编指令层面进行了探讨，可以多看几遍这个视频。
+1. **保证线程共享变量的任何改变对于所有线程而言都是==实时==可见的**
 
-简单来说，一个CPU**写**的时候会**锁总线**（具体是数据总线还是地址总线不清楚），并使写的数据在别的CPU的**缓存行中失效**。多看几遍这个视频，我发现volatile的并发策略是非常非常悲观的，不论是读还是写，都要锁总线，使数据失效。要类比的话，只有数据库中的**可串行化**可以与之匹敌。
+   具体来说，线程T1要操作volatile修饰的变量的时候，都不可以直接使用T1自己工作内存中该变量的副本，而必须**每次**都到主内存中读取（强制）。但是这种方式的底层是如何实现的呢？JavaGuide相关文章中只提到了[CPU 缓存模型](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020最新Java并发进阶常见面试题总结?id=_21-cpu-缓存模型)，没有认真讨论这个问题。而在[Java中volatile的几个问题？ - java小小刀的回答 - 知乎](https://www.zhihu.com/question/31990408/answer/1940692921)有对volatile的原理在汇编指令层面进行了探讨，可以多看几遍这个视频。
+
+   简单来说，一个CPU**写**的时候会**锁总线**（具体是数据总线还是地址总线不清楚），并使写的数据在别的CPU的**缓存行中失效**。多看几遍这个视频，我发现volatile的并发策略是非常非常悲观的，不论是读还是写，都要锁总线，使数据失效。要类比的话，只有数据库中的**可串行化**可以与之匹敌。
+
+2. **禁止进行指令重排序**
 
 
 
@@ -646,9 +648,13 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 <img src="Java的基础技巧等.assets/14923529-b96312d95eb09d15.png" alt="JDK8前的内存模型" style="zoom: 67%;" />
 
-- 方法区是由永久代（PermGen[^4]）实现的，我觉得既然新生代、老年代、永久代都是xx代，那么方法区其实和堆（heap）应该是同宗的。下面这段话也印证了该观点：
+- 在HotSpot JVM中，方法区是由永久代（PermGen[^4]）实现的，我觉得既然新生代、老年代、永久代都是xx代，那么方法区其实和堆（heap）应该是同宗的。下面这段话也印证了该观点：
 
-  > Java 虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫做 Non-Heap（非堆），目的应该是与 Java 堆区分开来。[^2]
+  > Java 虚拟机规范把方法区描述为堆的一个**逻辑部分**，但是它却有一个别名叫做 Non-Heap（非堆），目的应该是与 Java 堆区分开来。[^2]
+
+  那么，方法区和永久代之间是啥关系呢：
+
+  > 《Java 虚拟机规范》只是规定了有方法区这么个概念和它的作用，并没有规定如何去实现它。那么，在不同的 JVM 上方法区的实现肯定是不同的了。 **方法区和永久代的关系很像 Java 中接口和类的关系，类实现了接口，而永久代就是 HotSpot 虚拟机对虚拟机规范中方法区的一种实现方式。** 也就是说，永久代是 HotSpot 的概念，方法区是 Java 虚拟机规范中的定义，是一种规范，而永久代是一种实现，一个是标准一个是实现，其他的虚拟机实现并没有永久代这一说法。[^9]
 
 - 永久代导致OOM的两点关键原因❗：
 
@@ -676,6 +682,22 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 
 
+#### 比较JDK 8之前与之后的JMM
+
+- JDK 8之前。重点关注这里的方法区，它是JVM定义的一种**标准**，在不同的JVM的实现方式上方法区是不同的。HotSpot JVM是用永久代来实现方法区的，而JRockit JVM不知道是不是用元空间来实现方法区的，但能肯定的是，它不是用永久代来实现方法区的。
+
+  ![JVM堆内存结构-JDK7](Java的基础技巧等.assets/JVM堆内存结构-JDK7.png)
+
+- JDK 8及以后。重点关注元空间。这时直接取消了方法区，而用元空间来代替。
+
+  ![JVM堆内存结构-JDK8](Java的基础技巧等.assets/JVM堆内存结构-jdk8.png)
+
+- 别的区别，比如常量池所在区域的改变，暂时没有很好的总结。
+
+
+
+
+
 #### 堆（heap）
 
 这个部分的知识点挺多的，涉及到了GC、内存分代模型[^7]、四种引用类型等等。
@@ -688,7 +710,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 **内存分代模型**：上面的图其实说得很明白了，目前觉得分代的与GC线程有关。
 
-**4种引用类型**[^6]：堆也是GC的主要区域，这就涉及到了四种引用类型[^6]。我是在学习ThreadLocal的时候才接触到这四种应用类型的
+**4种引用类型**[^6]：堆是GC的主要区域，这就涉及到了四种引用类型[^6]。我是在学习ThreadLocal的时候才接触到这四种应用类型的
 
 
 
@@ -703,6 +725,8 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 **虚拟机栈**会有两个两种Error，其中一种是StackOverflowError，这是一种很经典的**Error**，一般在由递归的情况下容易发生，这时虚拟机栈中的栈帧太多，超过了虚拟机锁允许的深度。
 
 **栈帧**这个概念是比较核心的，**它是方法运行的基本结构**。同时，一个虚拟机栈会压入很多个栈帧，处于**栈顶**的栈帧为当前活动栈帧。
+
+**本地方法栈**
 
 <img src="Java的基础技巧等.assets/68747470733a2f2f6d792d626c6f672d746f2d7573652e6f73732d636e2d6265696a696e672e616c6979756e63732e636f6d2f323031392d332f4a564de8bf90e8a18ce697b6e695b0e68daee58cbae59f9f2e706e67" alt="img" style="zoom: 67%;" />
 
@@ -743,6 +767,28 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 **重量级锁**：上面的三种其实都是JVM提供的锁，当JVM提供的这些锁也不能解决问题时，便升级到重量级锁。为什么叫重量级呢？因为该锁是要向操作系统申请的，需要用户态向内核态切换，是很兴师动众的事情，所以很有重量喽🤣。该锁是一种用空间换取时间的方式：
 
 > 此时就会再次升级，变成传统意义上的重量级锁，本质上操作系统会维护一个**队列**，用**空间换时间**，避免多个线程同时自旋等待耗费CPU性能，等到上一个线程结束时唤醒等待的线程参与新一轮的锁竞争即可。
+
+## 垃圾回收——Garbage Collection
+
+这是一个大IP，先做一些快速调研
+
+- 分配担保机制
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -976,7 +1022,7 @@ private final boolean parkAndCheckInterrupt() {
 
   <img src="Java的基础技巧等.assets/7baac7778c6a41aa89b237bbec057ce6~tplv-k3u1fbpfcp-watermark.image" alt="图片.png" style="zoom: 50%;" />
   
-- 获取Class类的实例的四种方法：
+- 获取Class类实例的四种方法：
 
   1. `Class clazz = Person.class;`：若已知某具体的**类**，通过类的class属性来获得
   2. `Class clazz = person.getClass();`：若已知某个类的**实例**，通过该实例的`getClass()`方法来获取
@@ -987,14 +1033,14 @@ private final boolean parkAndCheckInterrupt() {
 
 - 这里就可以补充以前学JDBC的时候`Class.forName("com.mysql.cj.jdbc.Driver");`这段代码的作用 了：[^1]
 
-  >我都知道 `Class.forName()`是要加载一个类，不知道大家还记得不记得**类被加载时**是会执行**静态代码块**的，好像执行之一次
+  >我都知道 `Class.forName()`是要加载一个类，不知道大家还记得不记得**类被加载时是会执行静态代码块的**，好像执行之一次
   >所以A和B看似没关系，其实它们俩有“不可告人的秘密”，我敢打保证`com.mysql.cj.jdbc.Driver`这个类绝对有个**static代码块**，其中肯定有与B相关的代码结构：
 
   <img src="https://img-blog.csdnimg.cn/20201019211839536.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ1MDY3NjIw,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述" style="zoom:70%;" />
 
 - [学习java应该如何理解反射？](https://www.zhihu.com/question/24304289/answer/694344906)这个回答信息量很大！
 
-  - 先说说对`ClassLoader`的理解：将*.class字节码文件通过ClassLoader加载到内存中，并且返回Class对象。该类主要就做这一项工作。
+  - 先说说对`ClassLoader`的理解：将`*.class`字节码文件通过ClassLoader加载到内存中，并且返回Class对象。该类主要就做这一项工作。
 
   - Class类的理解：
 
@@ -1063,19 +1109,17 @@ private final boolean parkAndCheckInterrupt() {
   >
   > 因为BootstrapClassLoader是由**c++**实现的，所以并不存在一个Java的类，因此会打印出null，所以在ClassLoader中，null就代表了BootstrapClassLoader（有些片面）。
 
-  文章中有提到如何实现一个`ClassLoader`，惊喜的是使用到了**模板方法**模式！原来实现一个`ClassLoader`用到了该模式：只需要重写`findClass()`方法即可，看完`ClassLoader#loadClass()`源码其实就能明白原因。
-
-  （越看到后面越看不懂。。。歇歇再看。。。:joy:）
-
 - 但是目前看到的地方得注意一下，有一点讲的非常关键:star::star::star:
 
-  > 会抛出ClassCastException，因为一个类，就算包路径完全一致，**但是加载他们的ClassLoader不一样**，那么这两个类也会被认为是两个不同的类。
+  > 会抛出ClassCastException，==因为一个类，就算包路径完全一致，但是加载他们的ClassLoader不一样，那么这两个类也会被认为是两个不同的类==。
 
   这一点是新的知识，很厉害！
 
-- > Returns the class with the given binary name if this loader has been recorded by the Java virtual machine as an initiating loader of a class with that binary name. Otherwise null is returned.
-  >
-  > 将输入的binary name（即Java类的全名）对应的类返回，前提是***当前* 加载器**已经被JVM记录为具有这个binary name的类的启动类，反之返回`null`。（前提是...后面的话很重要）
+- 翻译`ClassLoader`类中的`findLoadedClass()`方法注释：
+  
+  > Returns the class with the given binary name if this loader has been recorded by the Java virtual machine as an initiating loader of a class with that binary name. Otherwise null is returned.
+>
+  > 将输入的binary name（即Java类的全名）对应的类返回，前提是**当前加载器**已经被JVM记录为具有这个binary name的类的启动类，反之返回`null`。（前提是...后面的话很重要）
 
   注意上面加粗，只有被**当前**类加载器加载的才会返回哦，其他类加载器加载的是不会返回的。
 
@@ -1130,3 +1174,4 @@ private final boolean parkAndCheckInterrupt() {
 [^6]: https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535/izbsgk#49G4D
 [^7]: [Java 程序员必会的「垃圾回收」算法](https://zhuanlan.zhihu.com/p/363224802)
 [^8]:[深入理解堆外内存 Metaspace](https://www.javadoop.com/post/metaspace)
+[^9]:[方法区和永久代的关系](https://snailclimb.gitee.io/javaguide/#/docs/java/jvm/Java内存区域?id=_251-方法区和永久代的关系)

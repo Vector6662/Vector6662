@@ -105,9 +105,38 @@ String message="good\n,hello,\r\n";
 message.split("\n|\r\n");//符号 | 便是匹配上一个即可
 ```
 
+## 序列化—Serializable[^10]
+
+我自己的总结是：序列化=持久化Java**对象**。
+一般Java对象都是在内存中的，而且这也符合尝试，但是如果要将Java对象持久化，也就是写入硬盘中，那就得用序列化了。
+
+参考文章中总结下来应该就三个重点：
+
+- Serializable接口有何用？
+
+  > 原来`Serializable`接口也仅仅只是做一个标记用！！！
+
+  这也是为什么该接口中没有任何方法，是个空接口的原因。
+
+  <img src="Java的基础技巧等.assets/v2-bde7f25f1ed5d0aaf76c12d12554795d_1440w.jpg" alt="img" style="zoom:33%;"/>
+
+- `serialVersionUID`号有何用？
+
+  >  如果在定义一个可序列化的类时，没有人为显式地给它定义一个`serialVersionUID`的话，则Java运行时环境会根据该类的各方面信息自动地为它生成一个默认的`serialVersionUID`，**一旦像上面一样更改了类的结构或者信息，则类的`serialVersionUID`也会跟着变化！**
+
+  加粗部分是我很关心的，这是怎么实现的？也就是可以通过类的元数据（元信息）就可以生成一个唯一的ID？
+
+- 序列化的受控和加强
+
+  
 
 
-## [泛型](https://segmentfault.com/a/1190000014120746) Generics🎈
+
+
+
+
+
+## [泛型](https://segmentfault.com/a/1190000014120746)—Generics🎈
 
 #### [泛型类](https://www.cnblogs.com/coprince/p/8603492.html)
 
@@ -456,7 +485,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
 
 
 
-## 注解 Annotation：
+## 注解—Annotation：
 
 ### 快速调研：
 
@@ -488,7 +517,7 @@ enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
 
 
 
-## FunctionalInterface：Java 8的新特性🎈
+## FunctionalInterface（Java 8的新特性）🎈
 
 > 写在前面：本质是**回调机制**，而且一个很有意思但我过了很久才发现的点是，那些能够采用lambda表达式，更本质说是实现回调的参数，无一列外都是`Interface`，这其实是显而易见的，但是很少有总结这个现象。
 
@@ -496,9 +525,9 @@ enhancer.setCallback((MethodInterceptor) (o, method, args, methodProxy) -> {
 
 我特么发现，这个所谓的函数式接口不也还是回调吗？？？只不过“有且仅有一个抽象方法”，所以可以用lambda表达式简化而已嘛。
 
-其实可以复盘一下下面的forEach()的调用过程就清楚了：
+其实可以复盘一下下面的foreach()的调用过程就清楚了：
 
-首先是forEach()的源码：
+首先是foreach()的源码：
 
 ```java
 default void forEach(Consumer<? super T> action) {
@@ -521,7 +550,19 @@ list.forEach(i->System.out.println(i));
 
 
 
-关于**回调**：通过上面的例子明白了，其实**回调业务逻辑**在于` action.accept(t);`，这里的逻辑还是比较简单的，仅仅是将数据t传入然后让具体业务进行处理，我把这个过程称为**数据业务逻辑**，这里便会才用到lambda表达式了。
+#### 关于回调：
+
+这是我新的理解思路：
+
+这是一个我非常欣赏的编程上的创新，因为我觉得能提出回调的人**逆向思维**能力一定很强悍。
+
+你想想，一般我们写一个方法，是不是就把方法体类的逻辑写好了，然后等待传递参数，也就是方法体的代码逻辑是固定的，形式是变化的。但是，谁规定方法体内的代码逻辑得固定了，为什么不能**”参数化“？？？**，形参可以根据具体传入的值而变化，为什么代码逻辑就不能按照这样的思路，根据传入的不同而变化了？
+
+
+
+这是之前的理解：
+
+通过上面的例子明白了，其实**回调业务逻辑**在于` action.accept(t);`，这里的逻辑还是比较简单的，仅仅是将数据t传入然后让具体业务进行处理，我把这个过程称为**数据业务逻辑**，这里便会才用到lambda表达式了。
 
 为了清晰理解回调的过程，我分为 回调业务逻辑 和 数据业务逻辑 这两个part，感觉就好理解些了。
 
@@ -603,13 +644,13 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
 ## Java内存模型
 
-请区别JMM，是JVM内存模型。Java内存模型指的是Java线程与内存之间的交互模式，而JMM描述的是JVM在运行时用到的区域情况。
+请区别 JMM—JVM内存模型。Java内存模型指的是Java线程与内存之间的交互模式，而JMM描述的是JVM在运行时用到的区域情况。
 
 <img src="Java的基础技巧等.assets/0ac7e663-7db8-4b95-8d8e-7d2b179f67e8.png" alt="JMM(Java内存模型)" style="zoom: 80%;" />
 
 *图中的 “本地内存 “ 我觉得描述不是很好，用 “线程的工作内存 ” 更准确些。*
 
-主存中的共享变量一般就指堆区或元数据区中的变量，而线程的工作内存因为有线程共享变量副本的存在，就会存在类似数据库并发事务中**丢失修改**问题。
+主存中的共享变量一般就指堆区（或元数据区）中的变量，而线程的工作内存因为有**线程共享变量副本**的存在，就会存在类似数据库并发事务中**丢失修改**问题。
 
 #### volatile
 
@@ -619,9 +660,17 @@ enhancer.setCallback((MethodInterceptor) (o, method, objects, methodProxy) -> {
 
    具体来说，线程T1要操作volatile修饰的变量的时候，都不可以直接使用T1自己工作内存中该变量的副本，而必须**每次**都到主内存中读取（强制）。但是这种方式的底层是如何实现的呢？JavaGuide相关文章中只提到了[CPU 缓存模型](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/2020最新Java并发进阶常见面试题总结?id=_21-cpu-缓存模型)，没有认真讨论这个问题。而在[Java中volatile的几个问题？ - java小小刀的回答 - 知乎](https://www.zhihu.com/question/31990408/answer/1940692921)有对volatile的原理在汇编指令层面进行了探讨，可以多看几遍这个视频。
 
-   简单来说，一个CPU**写**的时候会**锁总线**（具体是数据总线还是地址总线不清楚），并使写的数据在别的CPU的**缓存行中失效**。多看几遍这个视频，我发现volatile的并发策略是非常非常悲观的，不论是读还是写，都要锁总线，使数据失效。要类比的话，只有数据库中的**可串行化**可以与之匹敌。
+   简单来说，一个CPU**写**的时候会**锁总线**（感觉是数据总线），并使写的数据在别的CPU的**缓存行中失效**。多看几遍这个视频，我发现volatile的并发策略是非常非常悲观的，不论是读还是写，都要锁总线，使数据失效。要类比的话，只有数据库中的**可串行化**可以与之匹敌。
 
 2. **禁止进行指令重排序**
+
+   > 用单个线程讨论重排序，毫无意义
+
+   > **还有一个规则是无论怎么重新排序，单线程的执行结果不能被改变，也就是说在单线程的情况下，我们是感受不到重排序带来的影响的**。
+   >
+   > **这个指令的作用是使该指令之后的所有操作不能重排序到该指令的前面,专业术语叫做内存屏障。**
+   >
+   > 以上来自：Java中volatile的几个问题？ - 夏昊的回答 - 知乎 https://www.zhihu.com/question/31990408/answer/830790165
 
 
 
@@ -1175,3 +1224,4 @@ private final boolean parkAndCheckInterrupt() {
 [^7]: [Java 程序员必会的「垃圾回收」算法](https://zhuanlan.zhihu.com/p/363224802)
 [^8]:[深入理解堆外内存 Metaspace](https://www.javadoop.com/post/metaspace)
 [^9]:[方法区和永久代的关系](https://snailclimb.gitee.io/javaguide/#/docs/java/jvm/Java内存区域?id=_251-方法区和永久代的关系)
+[^10]:[Java序列化有什么作用？序列化与不序列化有什么区别？ - CodeSheep程序羊的回答 - 知乎](https://www.zhihu.com/question/26475281/answer/1257699781) 

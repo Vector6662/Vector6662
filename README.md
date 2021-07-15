@@ -32,13 +32,14 @@
 
 **我的面试八股学习进度：**
 
-- [ ] 阅读[JavaGuide](https://github.com/Snailclimb/JavaGuide)：
+- [ ] 阅读[JavaGuide](https://snailclimb.gitee.io/javaguide/#/)：
   - [ ] 分布式部分，虽然和MIT6.824比起来算是科普了，但是有些点还是值得学习的，比如对BASE有比较好的解释。
   - [ ] 并发容器，这个应该是纯八股了，有空看一看就行。
   - [ ] 关于Redis的分布式部分，我找到了一个比较不错的资源：[Redis](http://www.cyc2018.xyz/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis.html#%E5%8D%81%E4%B8%80%E3%80%81%E5%A4%8D%E5%88%B6)
   - [x] ❗volatile关键字防止指令重排序部分我觉得需要再深入学习一下
 - [ ] [JVM 垃圾回收](https://snailclimb.gitee.io/javaguide/#/docs/java/jvm/JVM垃圾回收)，boring😪。JavaGuide上面也有的。
 - [ ] 阅读[能解答一切的答案 · 语雀 (yuque.com)](https://www.yuque.com/books/share/2b434c74-ed3a-470e-b148-b4c94ba14535)
+  - [x] 尝试实现一下事务，其实原理很简单，就是关掉autocommit，而且
 
 
 
@@ -47,6 +48,10 @@
 🐶🐶🐶（抵触）但是还是得安排时间刷啊😭
 
 
+
+**TODO LIST：**
+
+jsr303写个知乎、今年华为杯记得复盘一下、git练习平台
 
 
 

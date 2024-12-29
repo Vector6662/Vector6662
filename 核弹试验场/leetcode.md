@@ -704,7 +704,10 @@ return res==INT_MAX ? 0:res;
 
 ## 二分搜索问题
 
-极品题解：[图解二分 | 最清晰易懂的讲解 | 一次性帮你解决二分边界问题【c++/java版本】](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/solution/tu-jie-er-fen-zui-qing-xi-yi-dong-de-jia-ddvc/)
+🥇基础问题讲解 参考：[二分查找 红蓝染色法 - 灵茶山艾府](https://www.bilibili.com/video/BV1AP41137w7/?vd_source=f5ed211b29648c8b4da66912ed65d9df)
+
+
+archived 此题解可能不再适用于理解此类题目：[图解二分 | 最清晰易懂的讲解 | 一次性帮你解决二分边界问题【c++/java版本】](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/solution/tu-jie-er-fen-zui-qing-xi-yi-dong-de-jia-ddvc/)
 
 [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)：最综合的问题。同时用到了找上界和找下界。
 

@@ -703,6 +703,7 @@ return res==INT_MAX ? 0:res;
 
 
 ## 二分搜索问题
+我的题解：[二分搜索 基础问题题解](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/solutions/3034084/er-fen-sou-suo-ji-chu-wen-ti-ti-jie-by-d-vp2z)
 
 🥇基础问题讲解 参考：[二分查找 红蓝染色法 - 灵茶山艾府](https://www.bilibili.com/video/BV1AP41137w7/?vd_source=f5ed211b29648c8b4da66912ed65d9df)
 

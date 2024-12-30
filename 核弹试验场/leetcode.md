@@ -712,7 +712,7 @@ archived 此题解可能不再适用于理解此类题目：[图解二分 | 最�
 
 [34. 在排序数组中查找元素的第一个和最后一个位置](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)：最综合的问题。同时用到了找上界和找下界。
 
-[35. 搜索插入位置](https://leetcode-cn.com/problems/search-insert-position/)：
+[35. 搜索插入位置](https://leetcode-cn.com/problems/search-insert-position/)：一行就能解决
 
 [162. 寻找峰值](https://leetcode-cn.com/problems/find-peak-element/)：很难想到可以用二分，参考题解[【宫水三叶の相信科学系列】关于能够「二分」的两点证明](https://leetcode-cn.com/problems/find-peak-element/solution/gong-shui-san-xie-noxiang-xin-ke-xue-xi-qva7v/)。
 

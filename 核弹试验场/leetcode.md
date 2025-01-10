@@ -268,6 +268,7 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 
 ## 排序类问题（待归类）
+快速排序问题更优解法：https://www.hello-algo.com/chapter_sorting/quick_sort/ 
 
 基本问题：[912. 排序数组](https://leetcode-cn.com/problems/sort-an-array/)，靶场。我的题解：[【快速排序复习】912.排序数组](https://leetcode-cn.com/problems/sort-an-array/solution/kuai-su-pai-xu-fu-xi-912pai-xu-shu-zu-by-s14x/)。
 

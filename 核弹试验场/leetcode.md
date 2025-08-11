@@ -61,8 +61,6 @@ toupper(char c) 字母小转大
 tolower(char c) 字母大转小
 ```
 
-
-
 ## `<algorithm>`头文件
 
 提供了很多很方便的api，怎么现在才知道。
@@ -72,8 +70,6 @@ tolower(char c) 字母大转小
 leetcode有一道实现这个函数的题目：[31. 下一个排列](https://leetcode-cn.com/problems/next-permutation/)。
 
 也可参考文章：[Cpp--next_permutation函数](https://blog.csdn.net/samkieth/article/details/49976637)
-
-
 
 #### 对`upper_bound`和`lower_bound`的理解
 
@@ -94,7 +90,6 @@ cout<<*lb<<endl;
 其实我没看出啥规律，反正这两个函数得用在有序的序列上边。
 
 > 首先说明这两个函数内部使用了二分查找，所以必须用在有序的区间上，满足有序的结构中有两个常见的面孔：std::map 和 std::set，他们本身就是有序的，所以提供了 std::map::lower_bound() 和 std::set::lower_bound() 这种类似的成员函数，但是原理都是一样的，我们可以弄明白一个，另外类似的函数就都清楚了。
->
 
 ## `priority_queue`
 
@@ -112,8 +107,6 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 //小顶堆
 2) priority_queue<int, vector<int>, greater<int> > c;
 ```
-
-
 
 很有意思的一点是，访问对头是`top`，而不是`front`。
 
@@ -141,10 +134,6 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 参考[【整理】C++ string转int，string转double，string转long，int转string，double转string…](https://blog.csdn.net/HiccupHiccup/article/details/62421032)，最常用的应该是`stoi`，相当于C的`atoi()`。
 
-
-
-
-
 # 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 
 # 今日明星题目：[128. 最长连续序列](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
@@ -156,8 +145,6 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 ## 基本数据结构实现
 
 [链表实现队列，LintCode 492 队列维护](https://www.lintcode.com/problem/492/solution)：有一个很细节的地方需要注意，解决内存泄漏，见我的题解：[链接](https://www.lintcode.com/problem/492/solution/55004)。
-
-
 
 ## 技巧性很强的题目
 
@@ -185,8 +172,6 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 [1154. 一年中的第几天](https://leetcode-cn.com/problems/day-of-the-year/)
 
-
-
 ## 一些小的算法主题
 
 #### 括号匹配
@@ -211,8 +196,6 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 [220. 存在重复元素 III](https://leetcode-cn.com/problems/contains-duplicate-iii/)：好厉害的一道题，花了我两个小时。我的题解：[220.存在重复元素III【二分+滑动窗口解法】](https://leetcode-cn.com/problems/contains-duplicate-iii/solution/220cun-zai-zhong-fu-yuan-su-iiier-fen-hu-lekj/)
 
-
-
 #### 计算器类问题
 
 [150. 逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)：这是比较简单的玩法，比较基础。[题解](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/solution/150ni-bo-lan-biao-da-shi-by-dong6662-7lz7/)
@@ -227,6 +210,8 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 #### 🎈前缀和
 
+可参考灵山题解： [前缀和+哈希表：从两次遍历到一次遍历，附变形题](https://leetcode.cn/problems/subarray-sum-equals-k/solutions/2781031/qian-zhui-he-ha-xi-biao-cong-liang-ci-bi-4mwr)
+
 [560. 和为 K 的子数组](https://leetcode-cn.com/problems/subarray-sum-equals-k/)：我的题解：[【前缀和+哈希】560.和为k的子数组](https://leetcode-cn.com/problems/subarray-sum-equals-k/solution/qian-zhui-he-ha-xi-560he-wei-kde-zi-shu-2av6n/)。
 
 [437. 路径总和 III](https://leetcode-cn.com/problems/path-sum-iii/)：同时归类到下边的“二叉树回溯”专题中。我的题解：[【前缀和+回溯】437.路径总和III](https://leetcode-cn.com/problems/path-sum-iii/solution/qian-zhui-he-hui-su-437lu-jing-zong-he-i-dc4o/)。
@@ -238,8 +223,6 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 #### *Knuth*洗牌算法
 
 ==**（待复习）**==[384. 打乱数组](https://leetcode-cn.com/problems/shuffle-an-array/)：就这一个题
-
-
 
 ## 数字出现次数
 
@@ -263,11 +246,8 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 [260. 只出现一次的数字 III](https://leetcode-cn.com/problems/single-number-iii/)：前两个思路的结合。
 
-
-
-
-
 ## 排序类问题（待归类）
+
 快速排序问题更优解法：https://www.hello-algo.com/chapter_sorting/quick_sort/ 
 
 基本问题：[912. 排序数组](https://leetcode-cn.com/problems/sort-an-array/)，靶场。我的题解：[【快速排序复习】912.排序数组](https://leetcode-cn.com/problems/sort-an-array/solution/kuai-su-pai-xu-fu-xi-912pai-xu-shu-zu-by-s14x/)。
@@ -282,13 +262,11 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 [378. 有序矩阵中第 K 小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/)：==**（待复习！）**==这是一个比较不错的练习题，我参考的题解中用到了归并排序的思想来写。
 
-| 时间复杂度 | 空间复杂度 |                                             |
-| ---------- | ---------- | ------------------------------------------- |
-| 归并排序   | O(NlogN)   | O(N)，需要额外O(N)空间的tmp数组             |
-| 快速排序   | O(NlogN)   | 最坏O(N)，最优O(logN)，函数递归调用的栈空间 |
-| 插入排序   | O(N^2^)    | O(1)                                        |
-
-
+| 时间复杂度 | 空间复杂度    |                             |
+| ----- | -------- | --------------------------- |
+| 归并排序  | O(NlogN) | O(N)，需要额外O(N)空间的tmp数组       |
+| 快速排序  | O(NlogN) | 最坏O(N)，最优O(logN)，函数递归调用的栈空间 |
+| 插入排序  | O(N^2^)  | O(1)                        |
 
 [220. 存在重复元素 III](https://leetcode-cn.com/problems/contains-duplicate-iii/)：🚀这道题也归纳在区间内问题中。好厉害的一道题，花了我两个小时。我的题解：[220.存在重复元素III【二分+滑动窗口解法】](https://leetcode-cn.com/problems/contains-duplicate-iii/solution/220cun-zai-zhong-fu-yuan-su-iiier-fen-hu-lekj/)
 
@@ -324,8 +302,6 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 
 网上看了很多的例子，这个例子最有说服力，因为例子中要有**至少三个相同的数**才能体现快排的不稳定性。得出的结论也很精辟：基准值的选取。
 
-
-
 ## TopK问题
 
 这是一个面试非常非常爱问的问题，问的点是有多少种解法。原题：[剑指 Offer 40. 最小的k个数](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
@@ -335,9 +311,7 @@ priority_queue<int, vector<int>, less<int> > a;//等价
 1. 基本的是排序，不管用快排还说堆排都可，时间复杂度都是O(nlogn)。快排的时间复杂度为O(nlogn)到O(n)。
 2. 堆。时间复杂度虽然和上边相同，但是空间复杂度只有O(k)了。
 3. **[快速选择](http://www.noteanddata.com/classic-algorithm-quick-select.html)**，快排的变体。这是最最高效的，时间复杂度只有O(n)，因为每次partition完毕后，会丢掉另一半，空间复杂度也只有O(1)。
-3. 多路归并：也是一种常见的外部排序。lintcode：[486 · 合并k个排序数组](https://www.lintcode.com/problem/486/)
-
-
+4. 多路归并：也是一种常见的外部排序。lintcode：[486 · 合并k个排序数组](https://www.lintcode.com/problem/486/)
 
 ## 并查集
 
@@ -399,8 +373,6 @@ SSR题解：[【宫水三叶】二分 + 倍增乘法解法（含模板）](https
 
 [剑指 Offer 62. 圆圈中最后剩下的数字](https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/)：约瑟夫环。我的题解《[约瑟夫环【迭代和递归解法】](https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/solution/xie-xing-de-yue-se-fu-huan-by-vector-37/)》
 
-
-
 ###### 待解决的问题：如何防止溢出？
 
 这类问题，通常测试用例中会有溢出的情况，如何解决这个问题？
@@ -408,10 +380,6 @@ SSR题解：[【宫水三叶】二分 + 倍增乘法解法（含模板）](https
 首先能够想到的是“暴力”，即变量声明为`long`。这是绝杀方法，解决一切溢出。
 
 其次，题解[69. Sqrt(x)-二分查找（Java）](https://leetcode-cn.com/problems/sqrtx/solution/er-fen-cha-zhao-niu-dun-fa-python-dai-ma-by-liweiw/)涉及的两种处理技巧需要掌握：1. `int mid=l+(r-l+1)/2`，将加法改成减法；2. `mid=x/mid`，将乘法改成除法。
-
-
-
-
 
 ## 位运算
 
@@ -465,8 +433,6 @@ SSR题解：[【宫水三叶】二分 + 倍增乘法解法（含模板）](https
 
 [316. 去除重复字母](https://leetcode-cn.com/problems/remove-duplicate-letters/)：精英怪，华为笔试遇到类似的。我的题解《[316.去除重复字母](https://leetcode-cn.com/problems/remove-duplicate-letters/solution/316qu-chu-zhong-fu-zi-mu-by-dong6662-56oy/)》。
 
-
-
 #### 单调队列
 
 [239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)：好家伙，一来就是hard。这是我的题解：[239.滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/solution/239hua-dong-chuang-kou-zui-da-zhi-by-don-lome/)。
@@ -495,8 +461,6 @@ SSR题解：[【宫水三叶】二分 + 倍增乘法解法（含模板）](https
 
 [152. 乘积最大子数组](https://leetcode-cn.com/problems/maximum-product-subarray/)和[53. 最大子数组和](https://leetcode-cn.com/problems/maximum-subarray/)：==**（待复习）**==说实话我还不是很理解。
 
-
-
 #### 股票买卖三部曲
 
 [121. 买卖股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock)
@@ -505,8 +469,6 @@ SSR题解：[【宫水三叶】二分 + 倍增乘法解法（含模板）](https
 
 [309. 最佳买卖股票时机含**冷冻期**](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)：我的题解：[【股票问题三部曲III】309. 最佳买卖股票时机含冷冻期](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/solution/gu-piao-wen-ti-san-bu-qu-iii-309-zui-jia-gj5u/)
 
-
-
 #### 子序列/数组问题
 
 [1143. 最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)：类似：[97. 交错字符串](https://leetcode-cn.com/problems/interleaving-string/)。注意看我本题的笔记，==找个时间写个题解==。
@@ -514,8 +476,6 @@ SSR题解：[【宫水三叶】二分 + 倍增乘法解法（含模板）](https
 [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/)：==（未完成）==
 
 [97. 交错字符串](https://leetcode-cn.com/problems/interleaving-string/)：
-
-
 
 [300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
@@ -540,8 +500,6 @@ SSR题解：[【宫水三叶】二分 + 倍增乘法解法（含模板）](https
 [487. 最大连续1的个数 II](https://leetcode-cn.com/problems/max-consecutive-ones-ii/)：既可以滑动窗口，也可以动态规划。
 
 [120. 三角形最小路径和](https://leetcode-cn.com/problems/triangle/)：这道题真的很需要逆向思维
-
-
 
 ## 二叉树和链表
 
@@ -580,8 +538,6 @@ void recur(){
 任何的递归调用都是这样三个部分，只是“本节点调用”和“递归调用”的处理顺序不同而已！
 
 然后的明确回溯的目标，这个我还没想清楚。
-
-
 
 ### 重要的二叉树、链表递归问题
 
@@ -631,8 +587,6 @@ void recur(){
 
 类似的题目有:[285. 二叉搜索树中的中序后继](https://leetcode-cn.com/problems/inorder-successor-in-bst/)，我的题解：[【中序遍历】285.二叉搜索树的中序后继](https://leetcode-cn.com/problems/inorder-successor-in-bst/solution/zhong-xu-bian-li-285er-cha-sou-suo-shu-d-z9y1/)。这个解法我比较满意。
 
-
-
 ### 构造二叉树==（待复习）==
 
 ###### 数组/链表转换为二叉树
@@ -657,8 +611,6 @@ void recur(){
 
 ==（未完成）==[428. 序列化和反序列化 N 叉树](https://leetcode-cn.com/problems/serialize-and-deserialize-n-ary-tree/)：微软考了两次
 
-
-
 ### 练习题目
 
 [328. 奇偶链表](https://leetcode-cn.com/problems/odd-even-linked-list/)：我觉得我的这个版本好理解些。
@@ -668,8 +620,6 @@ void recur(){
 [JZ8 二叉树的下一个结点](https://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e)
 
 [285. 二叉搜索树中的中序后继](https://leetcode-cn.com/problems/inorder-successor-in-bst/)：优雅的解法
-
-
 
 ## 滑动窗口
 
@@ -695,19 +645,15 @@ return res==INT_MAX ? 0:res;
 
 [487. 最大连续1的个数 II](https://leetcode-cn.com/problems/max-consecutive-ones-ii/)：既可以滑动窗口，也可以动态规划。
 
-
-
 ## 回文问题
 
 需要注意的三点：初始化，同时初始化len=1和2；遍历方式：外层应该用len。这是由回文问题的状态转移方程所决定的。
 
-
-
 ## 二分搜索问题
+
 我的题解：[二分搜索 基础问题题解](https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/solutions/3034084/er-fen-sou-suo-ji-chu-wen-ti-ti-jie-by-d-vp2z)
 
 🥇基础问题讲解 参考：[二分查找 红蓝染色法 - 灵茶山艾府](https://www.bilibili.com/video/BV1AP41137w7/?vd_source=f5ed211b29648c8b4da66912ed65d9df)
-
 
 archived 此题解可能不再适用于理解此类题目：[图解二分 | 最清晰易懂的讲解 | 一次性帮你解决二分边界问题【c++/java版本】](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/solution/tu-jie-er-fen-zui-qing-xi-yi-dong-de-jia-ddvc/)
 
@@ -719,15 +665,11 @@ archived 此题解可能不再适用于理解此类题目：[图解二分 | 最�
 
 [911. 在线选举](https://leetcode-cn.com/problems/online-election/)：我的题解：[【复习二分】911.在线选举](https://leetcode-cn.com/problems/online-election/solution/fu-xi-er-fen-911zai-xian-xuan-ju-by-dong-8w3k/)。
 
-
-
 #### 未总结的一类题：
 
 [33. 搜索旋转排序数组](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/)：==（待复习）==
 
 [面试题 10.03. 搜索旋转数组](https://leetcode-cn.com/problems/search-rotate-array-lcci/)：==（未完成）==
-
-
 
 #### ==待解决的问题==：`mid`位置的区别？
 
@@ -743,10 +685,6 @@ archived 此题解可能不再适用于理解此类题目：[图解二分 | 最�
 
 上上个引用其实没说清除，首先得直到解是在哪个区间，如果是在左区间，那就得用`mid=l+r+1`，这样才能更新r到mid-1，让r作为右边界，因为`l=mid`这种并不是更新区间，要+1或者-1才是。
 
-
-
-
-
 ## 深度优先搜索
 
 #### 矩阵的DFS
@@ -758,10 +696,6 @@ archived 此题解可能不再适用于理解此类题目：[图解二分 | 最�
 [39. 组合总和](https://leetcode-cn.com/problems/combination-sum/)：这是比较常规的
 
 [40. 组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)：主要是如何去重，这是一个非常非常常用的处理手段。参考：[回溯算法 + 剪枝（Java、Python）](https://leetcode-cn.com/problems/combination-sum-ii/solution/hui-su-suan-fa-jian-zhi-python-dai-ma-java-dai-m-3/225211/)。更精辟的是[置顶评论](https://leetcode-cn.com/problems/combination-sum-ii/solution/hui-su-suan-fa-jian-zhi-python-dai-ma-java-dai-m-3/225211)，学到了**避免重复的思想**。
-
-
-
-
 
 #### 子集组合排列
 
@@ -795,8 +729,6 @@ archived 此题解可能不再适用于理解此类题目：[图解二分 | 最�
 
 [375. 猜数字大小 II](https://leetcode-cn.com/problems/guess-number-higher-or-lower-ii/)：
 
-
-
 ## 广度优先搜索==（待复习和总结）==
 
 一般求解步骤类问题就是用它！
@@ -809,11 +741,7 @@ archived 此题解可能不再适用于理解此类题目：[图解二分 | 最�
 
 [752. 打开转盘锁](https://leetcode-cn.com/problems/open-the-lock/)：
 
-
-
 ###### ==（待总结）==根据层序遍历构造二叉树：https://zhuanlan.zhihu.com/p/325764810。这和堆异曲同工，总结一下
-
-
 
 ## 堆
 
@@ -822,8 +750,6 @@ archived 此题解可能不再适用于理解此类题目：[图解二分 | 最�
 [剑指 Offer 40. 最小的k个数](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)：这个题目我的实现用到了小顶堆
 
 总的来说，3+1个核心变量：`l`、`r`、`parent`+`minIdx`，`shiftUp`和`shiftDown`都是找到`arr[l]`、`arr[r]`、`arr[parent]`三者的最小值，将索引赋值给`minIdx`。然后，由于`shiftUp`是要子节点和更节点交换，所以每次循环完毕都是`idx=parent`，而`shiftDown`是根节点和两个子节点中**最小**的交换，所以每次循环完都是`idx=minIdx`。
-
-
 
 ## 图的相关题目
 
@@ -838,8 +764,6 @@ labuladong的[图论算法](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzAxOD
 [630. 课程表 III](https://leetcode-cn.com/problems/course-schedule-iii/)：这道题并不涉及拓扑排序，而涉及的是`priority_queue`。我的题解：[【优先队列应用】630.课程表III](https://leetcode-cn.com/problems/course-schedule-iii/solution/you-xian-dui-lie-ying-yong-630ke-cheng-b-6g18/)。参考题解：[【宫水三叶の相信科学系列】经典贪心运用题](https://leetcode-cn.com/problems/course-schedule-iii/solution/gong-shui-san-xie-jing-dian-tan-xin-yun-ghii2/)
 
 ==（待复习）==[851. 喧闹和富有](https://leetcode-cn.com/problems/loud-and-rich/)：这是一道练习题
-
-
 
 [797. 所有可能的路径](https://leetcode-cn.com/problems/all-paths-from-source-to-target/)：典型的对图的DFS。参考[宫水三叶的题解](https://leetcode-cn.com/problems/all-paths-from-source-to-target/solution/gong-shui-san-xie-yun-yong-dfs-bao-sou-s-xlz9/)，可以发现，和上边三道经典回溯问题有些区别，而且是很细微的区别。为啥会有这段：`path.push_back(0);`，也即对path的操作会在主方法中进行一次初始化，而那三道回溯问题对path的操作都是在dfs方法中？可以看看那三道问题在dfs中的for循环：`for(int i=start;...)`，看到没有！它们能够直接从start开始遍历，不会丢掉start的值。而图的回溯确运气没有那么好，得专门处理开始节点。
 

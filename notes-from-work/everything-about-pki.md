@@ -7,7 +7,7 @@ Related JIRA Task: https://jira.tools.sap/browse/MACOMMT-17239
 ### 查看某域名使用的certificate
 
 参考：[check-vertificate-openssl-linux](https://www.ssldragon.com/zh/blog/check-certificate-openssl-linux/#View-the-SSL-Certificate)
-
+ 
 ```bash
 echo | openssl s_client -connect yourplc.com:443 2>/dev/null | opensssl x509
 ```
